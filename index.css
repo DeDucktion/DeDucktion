@@ -1,0 +1,326 @@
+/* DESIGN THEME */
+/* DARK (default) */
+:root {
+    --bg: #0f1726;
+    --bg-soft: #141b2d;
+    --bg-glass: #1a2238;
+    --bg-grey: #222a42;
+
+    --border-glass: #2f3a5f;
+
+    --bg-title: #a6abc4;
+    --bg-tree-line: #9aa0b5;
+    --bg-concl-input: #3e4563;
+
+    --text: #e6edf3;
+    --text-muted: #9da7b3;
+
+    --accent: #4ea1ff;
+    --accent-soft: #244468;
+
+    --radius: 14px;
+
+    color-scheme: dark;
+}
+
+/* LIGHT */
+:root[data-theme="light"] {
+    --bg: #f4f6fa;
+    --bg-soft: #fafbfc;
+    --bg-glass: #ffffff;
+    --bg-grey: #eef1f6;
+
+    --border-glass: #dde2ea;
+
+    --bg-title: #1f2937;
+    --bg-tree-line: #374151;
+    --bg-concl-input: #e9edf3;
+
+    --text: #111827;
+    --text-muted: #6b7280;
+
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+
+    color-scheme: light;
+}
+/* Body */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* APP LAYOUT */
+
+.app {
+    display: grid;
+    background: var(--bg);
+    grid-template-columns:
+        minmax(100px, 170px) minmax(0, 1fr) minmax(100px, 170px);
+    height: 100vh;
+    gap: 12px;
+    padding: 12px;
+}
+
+/* SIDEBAR / PANEL */
+
+.sidebar,
+.panel {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+    padding: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 0;
+}
+
+.sidebar h2,
+.panel h2 {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.panel {
+    border-left: 1px solid var(--border-glass);
+}
+
+/* RULE BUTTONS */
+
+#rules button {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 8px 10px;
+
+    background: var(--bg-grey);
+    color: var(--text);
+
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+#rules button:hover {
+    background: var(--bg-soft);
+    border-color: var(--accent);
+}
+
+#rules button:active {
+    transform: scale(0.98);
+}
+
+/* MAIN AREA */
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-soft);
+}
+
+/* TITLEBLOCK */
+
+.titleblock {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+:root[data-theme="light"] .titleblock {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.title,
+.actionbar,
+.toolbar {
+    padding: 14px 18px;
+    background: transparent;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+/* ACTIONBAR / TOOLBAR */
+.actionbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.actionbar button {
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.actionbar button:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.toolbar input {
+    background: var(--bg-grey);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: var(--text);
+}
+
+/* INPUTS */
+input {
+    background: var(--bg-grey);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 6px 8px;
+    color: var(--text);
+    outline: none;
+}
+
+input::placeholder {
+    color: var(--text-muted);
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* TITLE */
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title h2 {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--bg-title);
+}
+
+/* VIEWPORT / CANVAS */
+
+.viewport {
+    overflow: hidden;
+    position: relative;
+    flex: 1;
+}
+
+#canvas {
+    display: inline-block;
+    width: max-content;
+}
+
+#proofViewport {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+    background: transparent;
+}
+
+#transformLayer {
+    transform-origin: 0 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* PROOF TREE */
+.proof-tree {
+    padding: 20px;
+    overflow: visible;
+}
+
+.tree-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.premises {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 18px;
+    margin-bottom: 6px;
+    font-size: 2rem;
+}
+
+/* Rule line */
+
+.rule-line {
+    display: flex;
+    align-items: center;
+}
+
+.rule-line .line {
+    width: 1px;
+    height: 3px;
+    background: var(--bg-tree-line);
+}
+
+.rule-line .rule-label {
+    font-size: 0.65rem;
+    margin-left: 5px;
+}
+
+/* Conclusion input */
+
+.conclusion-input {
+    margin: 7px 0;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 80px;
+    background: var(--bg-concl-input);
+    padding: 10px 20px;
+}
+
+.tree-node input {
+    padding: 4px;
+}
+
+/* RESULT PANEL */
+
+#result {
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+#result.ghost {
+    color: var(--text-muted);
+    font-style: italic;
+}

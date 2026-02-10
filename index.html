@@ -1,0 +1,61 @@
+<import>
+
+    <!doctype html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Natural Deduction Calculator</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+
+    <body>
+        <div class="app">
+
+            <aside class="sidebar">
+                <h2>Rules</h2>
+                <div id="rules"></div>
+            </aside>
+            
+            <main class="main">
+                <div class="titleblock">
+                    <div class="title">
+                        <h2>Natural Deduction Calculator</h2>
+                    </div>
+                    <div class="actionbar">
+                        <button id="validateBtn">Validate</button>
+                        <button id="practiceBtn">Practice</button>
+                        <button id="clearTreeBtn">Clear Tree</button>
+                        <button id="clearInputBtn">Clear Input</button>
+                        <button id="undoBtn">Undo</button>
+                        <button id="convertTexBtn">Convert to LaTex</button>
+                        <button id="convertTypBtn">Convert to Typst</button>
+                        <button id="themeToggle">Theme</button>
+                    </div>
+
+                    <div class="toolbar">
+                        <input id="premises" type="text" placeholder="e.g. (P->Q), P" style="flex:1" />
+                        <span style="align-self: center; font-weight: bold;">⊢</span>
+                        <input id="conclusion" type="text" placeholder="e.g. Q" style="flex:1" />
+                    </div>
+                </div>
+
+                <div id="proofViewport" class="viewport">
+                    <div id="transformLayer">
+                        <div id="canvas" class="proof-tree"></div>
+                    </div>
+                </div>
+
+            </main>
+
+            <aside class="panel">
+                <h2>Result</h2>
+                <div id="result" class="ghost">No validation yet.</div>
+            </aside>
+
+        </div>
+        <script type="module" src="/src/main.ts"></script>
+
+    </body>
+    </html>
