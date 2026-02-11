@@ -19,33 +19,44 @@ function apply() {
     `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
 
-function getTreeBounds() {
-  const canvas = document.getElementById("canvas")!;
-  return {
-    width: canvas.scrollWidth,
-    height: canvas.scrollHeight
-  };
+export function fitTreeToViewport() {
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById("canvas")!;
+    const view = document.getElementById("proofViewport")!;
+
+    const treeW = canvas.scrollWidth;
+    const treeH = canvas.scrollHeight;
+    if (treeW === 0 || treeH === 0) return;
+
+    const vw = view.clientWidth;
+    const vh = view.clientHeight;
+    const padding = 40;
+
+    const { scale, offsetX, offsetY } = getTransform();
+
+    const requiredScale = Math.min(
+      (vw - padding) / treeW,
+      (vh - padding) / treeH,
+      1
+    );
+
+    if (requiredScale < scale) {
+      setTransform(requiredScale, offsetX, offsetY);
+    }
+  });
 }
 
-export function fitTreeToViewport() {
+export function centerTree() {
   const canvas = document.getElementById("canvas")!;
   const view = document.getElementById("proofViewport")!;
+  const { width, height } = canvas.getBoundingClientRect();
 
-  const tree = getTreeBounds();
   const vw = view.clientWidth;
   const vh = view.clientHeight;
 
-  if (tree.width === 0 || tree.height === 0) return;
-
-  const padding = 40;
-  const scale = Math.min(
-    (vw - padding) / tree.width,
-    (vh - padding) / tree.height,
-    1
+  setTransform(
+    1,
+    (vw - width) / 2,
+    (vh - height) / 4
   );
-
-  const offsetX = (vw - tree.width * scale) / 2;
-  const offsetY = (vh - tree.height * scale) / 2;
-
-  setTransform(scale, offsetX, offsetY);
 }

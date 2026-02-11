@@ -20,7 +20,6 @@
 
     --radius: 14px;
 
-    color-scheme: dark;
 }
 
 /* LIGHT */
@@ -44,6 +43,15 @@
 
     color-scheme: light;
 }
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
 /* Body */
 html,
 body {
@@ -145,11 +153,11 @@ body {
     border: 1px solid var(--border-glass);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 24px #0000;
 }
 
 :root[data-theme="light"] .titleblock {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 18px #0000;
 }
 
 .title,
@@ -168,7 +176,7 @@ body {
 }
 
 .actionbar button {
-    background: transparent;
+    background: var(--bg-grey);
     border: 1px solid var(--border-glass);
     border-radius: 8px;
     padding: 6px 12px;
@@ -266,16 +274,16 @@ input:focus {
 }
 
 .tree-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .premises {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: 18px;
+    gap: 25px;
     margin-bottom: 6px;
     font-size: 2rem;
 }
@@ -289,7 +297,7 @@ input:focus {
 
 .rule-line .line {
     width: 1px;
-    height: 3px;
+    height: 1.8px;
     background: var(--bg-tree-line);
 }
 
@@ -305,7 +313,7 @@ input:focus {
     border-radius: 6px;
     text-align: center;
     min-width: 80px;
-    background: var(--bg-concl-input);
+    background: var(--bg-grey);
     padding: 10px 20px;
 }
 

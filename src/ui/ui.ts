@@ -2,7 +2,7 @@ import { Rules, getRule } from "../logic/deduction-rules.ts";
 import { appState } from "../main.ts";
 import type { DeductionNode } from "../logic/syntax.ts";
 import { parseFormula, FormulatoString } from "../logic/syntax.ts";
-import { fitTreeToViewport } from "./zoom.ts";
+import { fitTreeToViewport,  centerTree } from "./zoom.ts";
 
 export function renderRuleList(container: HTMLElement) {
   container.innerHTML = "";
@@ -61,15 +61,21 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
     }
   });
 }
-
-export function renderTree(container: HTMLElement) {
+let firstcenter = false;
+export function renderTree(container: HTMLElement, doFit = true) {
   container.innerHTML = "";
   if (!appState.root) return;
   const node = renderNode(appState.root);
   container.appendChild(node);
   requestAnimationFrame(() => {
     adjustAllRuleLines();
-    fitTreeToViewport();
+    if(doFit){
+      fitTreeToViewport();
+    }
+    if(!firstcenter){
+      centerTree();
+      firstcenter = true;
+    }
   });
 }
 
@@ -82,7 +88,7 @@ function renderNode(node: DeductionNode): HTMLElement {
   const premisesContainer = document.createElement("div");
   premisesContainer.className = "premises";
   for (const p of node.premises) {
-    const premEl = renderNode(p); // rekursiv
+    const premEl = renderNode(p);
     const premInput = premEl.querySelector<HTMLInputElement>("input.conclusion-input");
     if (premInput) attachKeyboardShortcuts(premInput);
     premisesContainer.appendChild(premEl);

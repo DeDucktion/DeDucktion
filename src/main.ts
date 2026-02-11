@@ -2,7 +2,7 @@ import { AppState } from "./ui/state.ts";
 import { renderRuleList, renderTree, adjustAllRuleLines, attachKeyboardShortcuts } from "./ui/ui.ts";
 import { proofcheck } from "./logic/deduction-rules.ts";
 import { treeToCurryst, treeToBussproof } from "./export/convert.ts";
-import { getTransform, setTransform, fitTreeToViewport } from "./ui/zoom.ts";
+import { getTransform, setTransform, fitTreeToViewport, centerTree } from "./ui/zoom.ts";
 
 export const appState = new AppState();
 
@@ -43,8 +43,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("undoBtn")!.onclick = () => {
         appState.undo();
-        renderTree(document.getElementById("canvas")!);
-        updateTransform();
+        renderTree(document.getElementById("canvas")!, false);
     };
 
     document.getElementById("validateBtn")!.onclick = () => {
@@ -71,7 +70,7 @@ window.addEventListener("DOMContentLoaded", () => {
         appState.selectedNode = null;
         appState.history = [];
         renderTree(document.getElementById("canvas")!);
-        updateTransform();
+        centerTree();
     }
 
     document.getElementById("clearInputBtn")!.onclick = () => {

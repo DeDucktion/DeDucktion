@@ -1,16 +1,22 @@
-import type {DeductionNode} from "../logic/syntax.ts";
+import type { DeductionNode } from "../logic/syntax.ts";
+import { getTransform, setTransform } from "./zoom.ts";
+
+type HistoryEntry = {
+    tree: DeductionNode;
+    transform: { scale: number; offsetX: number; offsetY: number }
+};
 
 export class AppState {
     root: DeductionNode | null = null;
     selectedNode: DeductionNode | null = null;
-    history: DeductionNode[] = [];
+    history: HistoryEntry[] = [];
 
-    constructor(){}
+    constructor() { }
 
     createNode(ruleName: string, arity: number): DeductionNode {
         const node: DeductionNode = {
             rule: ruleName,
-            premises: Array.from({length:arity}, () => this.emptyNode()),
+            premises: Array.from({ length: arity }, () => this.emptyNode()),
             conclusion: null
         };
         return node;
@@ -24,19 +30,28 @@ export class AppState {
         };
     }
 
-    setSelected(node: DeductionNode){
+    setSelected(node: DeductionNode) {
         this.selectedNode = node;
     }
 
-    pushHistory(){
+    pushHistory() {
         if (this.root) {
-            this.history.push(structuredClone(this.root));
+            this.history.push({
+                tree: structuredClone(this.root),
+                transform: getTransform()
+            });
         }
     }
 
-    undo(){
-        if(this.history.length>0){
-            this.root = this.history.pop() || null;
-        }
+    undo() {
+        const entry = this.history.pop();
+        if (!entry) return;
+
+        this.root = entry.tree;
+        setTransform(
+            entry.transform.scale,
+            entry.transform.offsetX,
+            entry.transform.offsetY
+        );
     }
 }
