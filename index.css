@@ -297,7 +297,7 @@ input:focus {
 
 .rule-line .line {
     width: 1px;
-    height: 1.8px;
+    height: 2px;
     background: var(--bg-tree-line);
 }
 
@@ -331,4 +331,40 @@ input:focus {
 #result.ghost {
     color: var(--text-muted);
     font-style: italic;
+}
+
+/* Split right panel */
+
+.split-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.panel-section {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.panel-section + .panel-section {
+    border-top: 1px solid var(--border-glass);
+}
+
+/* Help styling */
+
+.symbol-help {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.symbol-help code {
+    background: var(--bg-grey);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--text);
 }
