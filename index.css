@@ -1,5 +1,5 @@
-/* DESIGN THEME */
-/* DARK (default) */
+/* Theme */
+/* Dark (default) */
 :root {
     --bg: #0f1726;
     --bg-soft: #141b2d;
@@ -22,7 +22,7 @@
 
 }
 
-/* LIGHT */
+/* Light */
 :root[data-theme="light"] {
     --bg: #f4f6fa;
     --bg-soft: #fafbfc;
@@ -67,7 +67,7 @@ body {
     box-sizing: border-box;
 }
 
-/* APP LAYOUT */
+/* App */
 
 .app {
     display: grid;
@@ -79,7 +79,7 @@ body {
     padding: 12px;
 }
 
-/* SIDEBAR / PANEL */
+/* Sidebar */
 
 .sidebar,
 .panel {
@@ -106,7 +106,7 @@ body {
     border-left: 1px solid var(--border-glass);
 }
 
-/* RULE BUTTONS */
+/* Rulebuttons */
 
 #rules button {
     display: block;
@@ -133,7 +133,7 @@ body {
     transform: scale(0.98);
 }
 
-/* MAIN AREA */
+/* Main */
 .main {
     display: flex;
     flex-direction: column;
@@ -144,7 +144,7 @@ body {
     background: var(--bg-soft);
 }
 
-/* TITLEBLOCK */
+/* Titleblock */
 
 .titleblock {
     display: flex;
@@ -168,7 +168,7 @@ body {
     border-bottom: 1px solid var(--border-glass);
 }
 
-/* ACTIONBAR / TOOLBAR */
+/* Actionbar, Toolbar */
 .actionbar {
     display: flex;
     gap: 8px;
@@ -205,7 +205,7 @@ body {
     color: var(--text);
 }
 
-/* INPUTS */
+/* Inputs */
 input {
     background: var(--bg-grey);
     border: 1px solid var(--border-glass);
@@ -224,7 +224,7 @@ input:focus {
     box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
-/* TITLE */
+/* Title */
 
 .title {
     display: flex;
@@ -239,8 +239,7 @@ input:focus {
     color: var(--bg-title);
 }
 
-/* VIEWPORT / CANVAS */
-
+/* Canvas */
 .viewport {
     overflow: hidden;
     position: relative;
@@ -267,16 +266,16 @@ input:focus {
     height: 100%;
 }
 
-/* PROOF TREE */
+/* Prooftree */
 .proof-tree {
     padding: 20px;
     overflow: visible;
 }
 
 .tree-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .premises {
@@ -321,7 +320,7 @@ input:focus {
     padding: 4px;
 }
 
-/* RESULT PANEL */
+/* Result panel */
 
 #result {
     font-size: 0.9rem;
@@ -347,24 +346,36 @@ input:focus {
     overflow-y: auto;
 }
 
-.panel-section + .panel-section {
+.panel-section+.panel-section {
     border-top: 1px solid var(--border-glass);
+}
+
+.divider {
+    height: 1px;
+    background: var(--border-glass);
+    margin: 16px -12px;
 }
 
 /* Help styling */
 
 .symbol-help {
-    font-size: 0.85rem;
-    color: var(--text-muted);
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.symbol-help code {
+.symbol-help code,
+.syntax-help code {
     background: var(--bg-grey);
     padding: 2px 6px;
     border-radius: 6px;
     font-size: 0.8rem;
     color: var(--text);
+}
+
+.symbol-help div,
+.syntax-help div {
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
