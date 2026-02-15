@@ -1,4 +1,4 @@
-# Natural Deduction Calculator
+# DeDucktion - A Natural Deduction Calculator
 
 A web-based natural deduction proof editor and validator for propositional logic.
 The application allows interactive construction of proof trees, rule application, and formal verification of derivations.
