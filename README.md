@@ -1,7 +1,7 @@
 # DeDucktion - A Natural Deduction Calculator
 
 A web-based natural deduction proof editor and validator for propositional logic.
-The application allows interactive construction of proof trees, rule application, and formal verification of derivations.
+This application allows interactive construction of gentzen-like proof trees, rule application, and formal verification of derivations.
 
 ## Setup
 ```bash
