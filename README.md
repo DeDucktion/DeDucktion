@@ -20,4 +20,4 @@ npm run dev
 - Export to Typst ([Curryst](https://github.com/pauladam94/curryst)) and LaTeX ([Bussproofs](https://ctan.math.utah.edu/ctan/tex-archive/macros/latex/contrib/bussproofs/bussproofs.sty))
 
 ## Preview
-![alt text](ND-Calc.png)
+![alt text](Preview.png)
