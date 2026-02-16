@@ -9,10 +9,6 @@ npm install
 npm run dev
 ```
 
-## Requirements
-- Node.js 
-- npm
-
 ## Features
 - Interactive proof tree construction
 - Natural deduction rules (∧, ∨, →, ¬)
@@ -21,3 +17,15 @@ npm run dev
 
 ## Preview
 ![alt text](Preview.png)
+
+## Usage
+- Enter the premises in the left input field next to the "⊢" (comma-seperated).
+- Enter the desired conclusion in the right input field next to the "⊢".
+- Construct the proof tree bottom-up, starting with the final inference rule.
+- Add rules by clicking on the desired rule in the rule panel.
+- To extend the proof, select one of the premises in the tree and apply another rule to it.
+- Logical connectives can be entered using keyboard shortcuts (see _Input Help_ in the right panel).
+
+## Requirements
+- Node.js 
+- npm
