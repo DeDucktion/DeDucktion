@@ -1,8 +1,9 @@
 import { AppState } from "./ui/state.ts";
 import { renderRuleList, renderTree, adjustAllRuleLines, attachKeyboardShortcuts } from "./ui/ui.ts";
-import { proofcheck } from "./logic/deduction-rules.ts";
+import { proofcheck, validate } from "./logic/deduction-rules.ts";
 import { treeToCurryst, treeToBussproof } from "./export/convert.ts";
 import { getTransform, setTransform, fitTreeToViewport, centerTree } from "./ui/zoom.ts";
+import { parseFormula, tokenize } from "./logic/syntax.ts";
 
 export const appState = new AppState();
 
@@ -50,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const premInput = document.getElementById("premises") as HTMLInputElement;
         const conclInput = document.getElementById("conclusion") as HTMLInputElement;
         const resEl = document.getElementById("result");
-        console.log(premInput.value, conclInput.value);
+        ///console.log(premInput.value, conclInput.value);
 
         const res = proofcheck(appState.root, premInput.value, conclInput.value);
         console.log("deductionnode:", appState.root);
@@ -62,6 +63,10 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("practiceBtn")!.onclick = () => {
+        const premInput = document.getElementById("conclusion") as HTMLInputElement;
+        const v = document.querySelector("input")!.value;
+        console.log([...v].map(c => c.charCodeAt(0)));
+        console.log("length:", v.length);
         // TODO: Picks a random instance of a dataset with premises and conclusions 
     }
 

@@ -123,6 +123,7 @@ export const Rules: DeductionRule[] = [
         typstlabel: "-> E",
         check: (P, c) => {
             const [A, B] = P;
+            console.log(A!.kind === "cond" &&equal(A!.left, B!));
             return (
                 A!.kind === "cond" &&
                 equal(A!.left, B!) &&
@@ -174,8 +175,9 @@ export function getRule(name: string): DeductionRule | undefined {
 }
 
 export function validate(node: DeductionNode): boolean | null {
+    console.log("concl:", node.conclusion);
     if (!node.rule || !node.conclusion) return null;
-
+    
     const rule = node.rule ? getRule(node.rule) : undefined;
     
     if (!rule) return null;
@@ -183,6 +185,7 @@ export function validate(node: DeductionNode): boolean | null {
     if (node.premises.length !== rule.arity) return false;
 
     const premises = node.premises.map(p => p.conclusion);
+    console.log("premises1:", premises);
     if (premises.some(p => p == null)) return null;
 
     return rule.check(premises as Formula[], node.conclusion);
@@ -265,12 +268,15 @@ export function proofcheck(root: DeductionNode | null, premisesInput: string, co
     if (!root) return null;
 
     const premises = parsePremises(premisesInput);
+    console.log("premises:",premises);
     if (!premises) return null;
 
     const concl = parseConclusion(conclusionInput);
+    console.log("concl:", concl);
     if (!concl) return null;
 
     const val = validateTree(root, premises);
+    console.log("val", val);
     if (val !== true) return val;
 
     if (!root.conclusion) return null;

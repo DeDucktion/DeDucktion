@@ -6,6 +6,7 @@ export type Term =
 
 export type Formula =
     | { kind: "atom"; pred: string; args: Term[] }
+    | { kind: "falsum" }
     | { kind: "not"; sub: Formula }
     | { kind: "and"; left: Formula; right: Formula }
     | { kind: "or"; left: Formula; right: Formula }
@@ -27,6 +28,7 @@ export function tokenize(expr: string): string[] | null {
         "¬",
         "∧",
         "∨",
+        "⊥",
         "\\(",
         "\\)",
         "(?:A|E)",
@@ -53,13 +55,17 @@ export function tokenize(expr: string): string[] | null {
     if (joinedTokens !== cleanedInput) {
         return null;
     }
-
+    ///console.log("tokens", tokens);
     return tokens;
 }
 
 export function parseFormula(input: string): Formula | null {
     const tokens = tokenize(input);
     if (!tokens) return null;
+
+    if (tokens.length === 1 && tokens[0] === "⊥") {
+        return { kind: "falsum" };
+    }
 
     const atom = parseAtom(tokens);
     if (atom && atom.rest.length === 0) return atom.formula;
@@ -131,6 +137,8 @@ export function FormulatoString(f: Formula): string {
     switch (f.kind) {
         case "atom":
             return f.pred + f.args.map(a => a.name).join("");
+        case "falsum":
+            return "⊥";
         case "not":
             return "¬" + FormulatoString(f.sub);
         case "and":
@@ -157,6 +165,9 @@ export function equal(a: Formula, b: Formula): boolean {
                 a.args.length === b.args.length &&
                 a.args.every((t, i) => t.name === b.args[i]!.name)
             );
+
+        case "falsum":
+            return b.kind === "falsum";
 
         case "not":
             return b.kind === "not" && equal(a.sub, b.sub);

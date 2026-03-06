@@ -37,7 +37,9 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
     "~": "¬",
     "not": "¬",
     "->": "→",
-    "to": "→"
+    "to": "→",
+    "bot": "⊥",
+    "falsum": "⊥",
   };
 
   const maxLen = Math.max(...Object.keys(replacements).map(k => k.length));
