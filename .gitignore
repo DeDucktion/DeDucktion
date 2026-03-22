@@ -4,3 +4,7 @@ dist/
 *.log
 .DS_Store
 .directory
+
+# direnv
+.direnv/
+.envrc
