@@ -16,7 +16,7 @@ npm run serve
 - Export to Typst ([Curryst](https://github.com/pauladam94/curryst)) and LaTeX ([Bussproofs](https://ctan.math.utah.edu/ctan/tex-archive/macros/latex/contrib/bussproofs/bussproofs.sty))
 
 ## Preview
-![alt text](Preview.png)
+![alt text](assets/preview.png)
 
 ## Usage
 - Enter the premises in the left input field next to the "⊢" (comma-seperated).
