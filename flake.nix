@@ -17,9 +17,14 @@
             nodejs
             vscode-langservers-extracted
             typescript-language-server
+            rustc
+            cargo
+            clippy
+            rustfmt
+            rust-analyzer
+            wasm-pack
+            lld
           ];
-
-          shellHook = "unset SOURCE_DATE_EPOCH";
         };
       }
     );

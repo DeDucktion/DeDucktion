@@ -1,5 +1,5 @@
-import type { Formula, DeductionNode } from "../logic/syntax.ts";
-import { getRule } from "../logic/deduction-rules.ts";
+import type { Formula, DeductionNode } from "../logic/syntax";
+import { getRule } from "../logic/deduction-rules";
 
 /// Typst
 
