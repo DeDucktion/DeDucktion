@@ -25,6 +25,7 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
+            favicon: './assets/favicon.ico',
         }),
         new WasmPackPlugin({
             crateDirectory: "./engine/wasm-bindings"
