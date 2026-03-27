@@ -1,10 +1,13 @@
-import { AppState } from "./ui/state.ts";
-import { renderRuleList, renderTree, adjustAllRuleLines, attachKeyboardShortcuts } from "./ui/ui.ts";
-import { proofcheck } from "./logic/deduction-rules.ts";
-import { treeToCurryst, treeToBussproof } from "./export/convert.ts";
-import { getTransform, setTransform, fitTreeToViewport, centerTree } from "./ui/zoom.ts";
+import { AppState } from "./ui/state";
+import { renderRuleList, renderTree, adjustAllRuleLines, attachKeyboardShortcuts } from "./ui/ui";
+import { proofcheck } from "./logic/deduction-rules";
+import { treeToCurryst, treeToBussproof } from "./export/convert";
+import { getTransform, setTransform, fitTreeToViewport, centerTree } from "./ui/zoom";
+
+import * as css from "../index.css";
 
 export const appState = new AppState();
+
 
 const transformLayer = document.getElementById("transformLayer")!;
 let scale = 1;
