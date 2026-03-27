@@ -8,7 +8,6 @@ import "../index.css";
 
 export const appState = new AppState();
 
-
 const transformLayer = document.getElementById("transformLayer")!;
 let scale = 1;
 let offsetX = 0;
