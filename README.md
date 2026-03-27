@@ -3,10 +3,10 @@
 A web-based natural deduction proof editor and validator for propositional logic.
 This application allows interactive construction of gentzen-like proof trees, rule application, and formal verification of derivations.
 
-## Setup
+## Local Dev Setup
 ```bash
 npm install
-npm run dev
+npm run serve
 ```
 
 ## Features
@@ -27,5 +27,5 @@ npm run dev
 - Logical connectives can be entered using keyboard shortcuts (see _Input Help_ in the right panel).
 
 ## Requirements
-- Node.js 
+- Node.js
 - npm
