@@ -3,6 +3,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -24,6 +25,9 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
+        }),
+        new WasmPackPlugin({
+            crateDirectory: "./engine/wasm-bindings"
         }),
 
         // Add your plugins here
@@ -55,6 +59,9 @@ const config = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+        alias: {
+            engine: path.resolve(__dirname, "./engine/wasm-bindings/pkg"),
+        },
     },
     experiments: {
         asyncWebAssembly: true

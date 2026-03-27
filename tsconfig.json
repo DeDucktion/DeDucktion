@@ -23,6 +23,11 @@
 
     // more
     "allowSyntheticDefaultImports": true,
-    "allowJs": true
+    "allowJs": true,
+
+    // path aliases
+    "paths": {
+      "engine": ["./engine/wasm-bindings/pkg"]
+    }
   }
 }
