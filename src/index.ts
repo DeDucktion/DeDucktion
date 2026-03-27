@@ -4,7 +4,7 @@ import { proofcheck } from "./logic/deduction-rules";
 import { treeToCurryst, treeToBussproof } from "./export/convert";
 import { getTransform, setTransform, fitTreeToViewport, centerTree } from "./ui/zoom";
 
-import * as css from "../index.css";
+import "../index.css";
 
 export const appState = new AppState();
 
