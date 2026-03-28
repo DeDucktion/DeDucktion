@@ -1,7 +1,7 @@
 use chumsky::prelude::*;
 use chumsky::text::{ident, keyword};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     ParenOpen,
     ParenClose,
