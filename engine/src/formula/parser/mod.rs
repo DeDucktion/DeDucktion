@@ -1,16 +1,18 @@
 use chumsky::input::ValueInput;
 use chumsky::prelude::*;
 
-use crate::formula::prop::lexer::Token;
-use crate::formula::prop::{BinaryConnective, Formula, UnaryConnective};
+use crate::formula::{BinaryConnective, Formula, UnaryConnective};
 
-use super::Span;
+use lexer::Token;
+
+pub mod lexer;
+pub mod settings;
 
 /// Parses a formula that may be marked as discharged
 pub fn formula_parser<'tok, I>()
 -> impl Parser<'tok, I, (Formula, bool), extra::Err<Rich<'tok, Token>>>
 where
-    I: ValueInput<'tok, Token = Token, Span = Span>,
+    I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
 {
     let not_discharged = formula().map(|f| (f, false));
 
@@ -23,7 +25,7 @@ where
 
 fn formula<'tok, I>() -> impl Parser<'tok, I, Formula, extra::Err<Rich<'tok, Token>>>
 where
-    I: ValueInput<'tok, Token = Token, Span = Span>,
+    I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
 {
     recursive(|formula| {
         let var = select! { Token::Ident(var) => Formula::Var(var) };
@@ -63,7 +65,7 @@ where
 fn unary_connective<'tok, I>()
 -> impl Parser<'tok, I, UnaryConnective, extra::Err<Rich<'tok, Token>>> + Clone
 where
-    I: ValueInput<'tok, Token = Token, Span = Span>,
+    I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
 {
     just(Token::Not).to(UnaryConnective::Not)
 }
@@ -71,7 +73,7 @@ where
 fn binary_connective<'tok, I>()
 -> impl Parser<'tok, I, BinaryConnective, extra::Err<Rich<'tok, Token>>> + Clone
 where
-    I: ValueInput<'tok, Token = Token, Span = Span>,
+    I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
 {
     choice((
         just(Token::And).to(BinaryConnective::And),
