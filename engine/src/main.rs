@@ -1,3 +1,3 @@
 fn main() {
-    deducktion_engine::formula::prop::test_parser("not !(not a or b)");
+    deducktion_engine::formula::test_parser("not !(not a or b)");
 }
