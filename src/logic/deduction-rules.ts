@@ -1,5 +1,5 @@
-import type { DeductionNode, Formula } from "./syntax.ts";
-import { parseFormula, equal } from "./syntax.ts";
+import type { DeductionNode, Formula } from "./syntax";
+import { parseFormula, equal } from "./syntax";
 
 // Deduction-Rules
 

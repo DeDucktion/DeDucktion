@@ -1,0 +1,14 @@
+[package]
+name = "deducktion-engine-wasm"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+deducktion-engine = { path = ".." }
+
+wasm-bindgen = { workspace = true }
+serde_json = { workspace = true }
+serde-wasm-bindgen = { workspace = true }
