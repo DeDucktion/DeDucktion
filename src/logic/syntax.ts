@@ -1,7 +1,7 @@
 // Syntax
 
 export type Term =
-    | { kind: "var", name: string }
+    | { kind: "var"; name: string }
     | { kind: "const"; name: string };
 
 export type Formula =
@@ -33,7 +33,7 @@ export function tokenize(expr: string): string[] | null {
         "[BCDEFGHIJKLMNOPQRSTUVWXYZ](?:_\\d+)?(?:\\^\\d+)?(?:[xyz](?:_\\d+)?)+",
         "[BCDEFGHIJKLMNOPQRSTUVWXYZ](?:_\\d+)?(?:\\^\\d+)?",
         "[xyz](?:_\\d+)?",
-        "\\s+"
+        "\\s+",
     ];
 
     const combined = tokenPatterns.join("|");
@@ -91,8 +91,8 @@ export function parseFormula(input: string): Formula | null {
                 return t === "∧"
                     ? { kind: "and", left, right }
                     : t === "∨"
-                        ? { kind: "or", left, right }
-                        : { kind: "cond", left, right }
+                      ? { kind: "or", left, right }
+                      : { kind: "cond", left, right };
             }
         }
     }
@@ -123,14 +123,14 @@ function parseAtom(tokens: string[]) {
 
     return {
         formula: { kind: "atom", pred, args } as const,
-        rest: tokens.slice(i)
+        rest: tokens.slice(i),
     };
 }
 
 export function FormulatoString(f: Formula): string {
     switch (f.kind) {
         case "atom":
-            return f.pred + f.args.map(a => a.name).join("");
+            return f.pred + f.args.map((a) => a.name).join("");
         case "not":
             return "¬" + FormulatoString(f.sub);
         case "and":

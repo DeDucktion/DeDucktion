@@ -1,33 +1,32 @@
 {
-  "compilerOptions": {
+    "compilerOptions": {
+        // Environment Settings
+        "module": "ESNext",
+        "target": "ES2020",
 
-    // Environment Settings
-    "module": "ESNext",
-    "target": "ES2020",
+        // Stricter Typechecking Options
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
 
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+        // Style Options
+        "noImplicitAny": true,
 
-    // Style Options
-    "noImplicitAny": true,
+        // Recommended Options
+        "strict": true,
+        "jsx": "react-jsx",
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "noUncheckedSideEffectImports": true,
+        "moduleDetection": "force",
+        "skipLibCheck": true,
 
-    // Recommended Options
-    "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
+        // more
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
 
-    // more
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-
-    // path aliases
-    "paths": {
-      "engine": ["./engine/wasm-bindings/pkg"]
+        // path aliases
+        "paths": {
+            "engine": ["./engine/wasm-bindings/pkg"]
+        }
     }
-  }
 }
