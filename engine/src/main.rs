@@ -1,6 +1,7 @@
-use deducktion_engine::prop::parser::settings::ParsingSettings;
+use deducktion_engine::prop::{Formula, parser::settings::ParsingSettings};
 
 fn main() {
     let settings = ParsingSettings::default();
-    deducktion_engine::prop::test_parser("not (not A or not B)", &settings);
+    let formula = Formula::parse("not (not A and B)", &settings);
+    let _ = dbg!(formula);
 }
