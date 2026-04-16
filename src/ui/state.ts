@@ -11,8 +11,6 @@ export class AppState {
     selectedNode: DeductionNode | null = null;
     history: HistoryEntry[] = [];
 
-    constructor() {}
-
     createNode(ruleName: string, arity: number): DeductionNode {
         const node: DeductionNode = {
             rule: ruleName,

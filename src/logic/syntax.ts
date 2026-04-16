@@ -42,7 +42,10 @@ export function tokenize(expr: string): string[] | null {
     const tokens: string[] = [];
     let match: RegExpExecArray | null;
 
-    while ((match = regex.exec(expr)) !== null) {
+    while (true) {
+        match = regex.exec(expr);
+        if (match == null) break;
+
         const tok = match[0];
         if (!tok.match(/^\s+$/)) {
             tokens.push(tok);
@@ -108,7 +111,7 @@ function parseAtom(tokens: string[]) {
     if (!m) return null;
 
     const pred = m[0];
-    const arity = m[4] ? parseInt(m[4]) : 0;
+    const arity = m[4] ? parseInt(m[4], 10) : 0;
 
     const args: Term[] = [];
     let i = 1;
@@ -132,7 +135,7 @@ export function FormulatoString(f: Formula): string {
         case "atom":
             return f.pred + f.args.map((a) => a.name).join("");
         case "not":
-            return "¬" + FormulatoString(f.sub);
+            return `¬${FormulatoString(f.sub)}`;
         case "and":
             return `(${FormulatoString(f.left)}∧${FormulatoString(f.right)})`;
         case "or":

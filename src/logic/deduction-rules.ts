@@ -126,7 +126,7 @@ export const Rules: DeductionRule[] = [
         label: "¬E",
         latexlabel: "\\lnot E",
         typstlabel: "not E",
-        check: (P, c) => {
+        check: (P, _c) => {
             const [A, B] = P;
             return (
                 (A!.kind === "not" && equal(A!.sub, B!)) ||
