@@ -7,6 +7,7 @@
     "watch": "webpack --watch"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.12",
     "@wasm-tool/wasm-pack-plugin": "^1.7.0",
     "css-loader": "^7.1.4",
     "html-loader": "^5.1.0",
