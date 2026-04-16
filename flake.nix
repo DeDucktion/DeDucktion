@@ -24,6 +24,7 @@
             rust-analyzer
             wasm-pack
             lld
+            just
           ];
         };
       }
