@@ -1,8 +1,6 @@
 // Syntax
 
-export type Term =
-    | { kind: "var"; name: string }
-    | { kind: "const"; name: string };
+export type Term = { kind: "var"; name: string } | { kind: "const"; name: string };
 
 export type Formula =
     | { kind: "atom"; pred: string; args: Term[] }
@@ -165,23 +163,11 @@ export function equal(a: Formula, b: Formula): boolean {
             return b.kind === "not" && equal(a.sub, b.sub);
 
         case "and":
-            return (
-                b.kind === "and" &&
-                equal(a.left, b.left) &&
-                equal(a.right, b.right)
-            );
+            return b.kind === "and" && equal(a.left, b.left) && equal(a.right, b.right);
         case "or":
-            return (
-                b.kind === "or" &&
-                equal(a.left, b.left) &&
-                equal(a.right, b.right)
-            );
+            return b.kind === "or" && equal(a.left, b.left) && equal(a.right, b.right);
         case "cond":
-            return (
-                b.kind === "cond" &&
-                equal(a.left, b.left) &&
-                equal(a.right, b.right)
-            );
+            return b.kind === "cond" && equal(a.left, b.left) && equal(a.right, b.right);
     }
     return false;
 }

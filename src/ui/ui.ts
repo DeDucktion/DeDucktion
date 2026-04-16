@@ -48,17 +48,12 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
 
         buffer = input.value.slice(Math.max(0, start - maxLen), start);
 
-        const keys = Object.keys(replacements).sort(
-            (a, b) => b.length - a.length,
-        );
+        const keys = Object.keys(replacements).sort((a, b) => b.length - a.length);
         for (const key of keys) {
             if (buffer.endsWith(key)) {
                 const replacement = replacements[key];
                 const value = input.value;
-                input.value =
-                    value.slice(0, start - key.length) +
-                    replacement +
-                    value.slice(end);
+                input.value = value.slice(0, start - key.length) + replacement + value.slice(end);
                 input.selectionStart = input.selectionEnd =
                     start - key.length + replacement!.length;
                 buffer = "";
@@ -94,9 +89,7 @@ function renderNode(node: DeductionNode): HTMLElement {
     premisesContainer.className = "premises";
     for (const p of node.premises) {
         const premEl = renderNode(p);
-        const premInput = premEl.querySelector<HTMLInputElement>(
-            "input.conclusion-input",
-        );
+        const premInput = premEl.querySelector<HTMLInputElement>("input.conclusion-input");
         if (premInput) attachKeyboardShortcuts(premInput);
         premisesContainer.appendChild(premEl);
     }
@@ -112,9 +105,7 @@ function renderNode(node: DeductionNode): HTMLElement {
     label.className = "rule-label";
     if (node.rule) {
         console.log(Rules);
-        label.textContent = getRule(node.rule)
-            ? getRule(node.rule)!.label
-            : node.rule;
+        label.textContent = getRule(node.rule) ? getRule(node.rule)!.label : node.rule;
         ruleLine.appendChild(line);
         ruleLine.appendChild(label);
     }
@@ -141,24 +132,18 @@ function renderNode(node: DeductionNode): HTMLElement {
 }
 
 export function adjustAllRuleLines(): void {
-    const nodes = Array.from(
-        document.querySelectorAll<HTMLElement>(".tree-node"),
-    );
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>(".tree-node"));
 
     for (const node of nodes) {
         const premiseNodes = Array.from(
-            node.querySelectorAll<HTMLElement>(
-                ":scope > .premises > .tree-node",
-            ),
+            node.querySelectorAll<HTMLElement>(":scope > .premises > .tree-node"),
         );
 
         if (premiseNodes.length === 0) continue;
 
         const childConclusions: HTMLElement[] = [];
         for (const prem of premiseNodes) {
-            const conc = prem.querySelector<HTMLElement>(
-                ":scope > input.conclusion-input",
-            );
+            const conc = prem.querySelector<HTMLElement>(":scope > input.conclusion-input");
             if (conc) childConclusions.push(conc);
         }
         if (childConclusions.length === 0) continue;
@@ -174,9 +159,7 @@ export function adjustAllRuleLines(): void {
         const width = right - left;
 
         // Linie
-        const lineEl = node.querySelector<HTMLElement>(
-            ":scope > .rule-line > .line",
-        );
+        const lineEl = node.querySelector<HTMLElement>(":scope > .rule-line > .line");
         if (lineEl) {
             lineEl.style.position = "absolute";
             lineEl.style.left = `${left}px`;
@@ -184,18 +167,14 @@ export function adjustAllRuleLines(): void {
         }
 
         // Rule-label
-        const ruleLabel = node.querySelector<HTMLElement>(
-            ":scope > .rule-line > .rule-label",
-        );
+        const ruleLabel = node.querySelector<HTMLElement>(":scope > .rule-line > .rule-label");
         if (ruleLabel) {
             ruleLabel.style.position = "absolute";
             ruleLabel.style.left = `${left + width + 1}px`;
         }
 
         // Conclusioninput
-        const concl = node.querySelector<HTMLElement>(
-            ":scope > .conclusion-input",
-        );
+        const concl = node.querySelector<HTMLElement>(":scope > .conclusion-input");
         if (concl) {
             const concCenter = concl.offsetLeft + concl.offsetWidth / 2;
             const targetCenter = left + width / 2;

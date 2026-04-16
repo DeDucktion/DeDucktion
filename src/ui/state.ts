@@ -46,10 +46,6 @@ export class AppState {
         if (!entry) return;
 
         this.root = entry.tree;
-        setTransform(
-            entry.transform.scale,
-            entry.transform.offsetX,
-            entry.transform.offsetY,
-        );
+        setTransform(entry.transform.scale, entry.transform.offsetX, entry.transform.offsetY);
     }
 }

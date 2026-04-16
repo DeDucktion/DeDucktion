@@ -100,9 +100,7 @@ export const Rules: DeductionRule[] = [
         typstlabel: "-> E",
         check: (P, c) => {
             const [A, B] = P;
-            return (
-                A!.kind === "cond" && equal(A!.left, B!) && equal(A!.right, c)
-            );
+            return A!.kind === "cond" && equal(A!.left, B!) && equal(A!.right, c);
         },
     },
     {
@@ -129,8 +127,7 @@ export const Rules: DeductionRule[] = [
         check: (P, _c) => {
             const [A, B] = P;
             return (
-                (A!.kind === "not" && equal(A!.sub, B!)) ||
-                (B!.kind === "not" && equal(B!.sub, A!))
+                (A!.kind === "not" && equal(A!.sub, B!)) || (B!.kind === "not" && equal(B!.sub, A!))
             );
         },
     },
@@ -159,10 +156,7 @@ export function validate(node: DeductionNode): boolean | null {
 
 type Context = Formula[];
 
-export function validateTree(
-    node: DeductionNode,
-    context: Context,
-): boolean | null {
+export function validateTree(node: DeductionNode, context: Context): boolean | null {
     if (!node.rule) {
         if (!node.conclusion) return null;
         return context.some((f) => equal(f, node.conclusion!));

@@ -1,18 +1,8 @@
 import { treeToBussproof, treeToCurryst } from "./export/convert";
 import { proofcheck } from "./logic/deduction-rules";
 import { AppState } from "./ui/state";
-import {
-    adjustAllRuleLines,
-    attachKeyboardShortcuts,
-    renderRuleList,
-    renderTree,
-} from "./ui/ui";
-import {
-    centerTree,
-    fitTreeToViewport,
-    getTransform,
-    setTransform,
-} from "./ui/zoom";
+import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui/ui";
+import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./ui/zoom";
 
 import "../index.css";
 
@@ -33,12 +23,8 @@ function updateTransform() {
 window.addEventListener("DOMContentLoaded", () => {
     renderRuleList(document.getElementById("rules")!);
 
-    const premisesInput = document.getElementById(
-        "premises",
-    ) as HTMLInputElement;
-    const conclusionInput = document.getElementById(
-        "conclusion",
-    ) as HTMLInputElement;
+    const premisesInput = document.getElementById("premises") as HTMLInputElement;
+    const conclusionInput = document.getElementById("conclusion") as HTMLInputElement;
 
     attachKeyboardShortcuts(premisesInput);
     attachKeyboardShortcuts(conclusionInput);
@@ -63,20 +49,12 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("validateBtn")!.onclick = () => {
-        const premInput = document.getElementById(
-            "premises",
-        ) as HTMLInputElement;
-        const conclInput = document.getElementById(
-            "conclusion",
-        ) as HTMLInputElement;
+        const premInput = document.getElementById("premises") as HTMLInputElement;
+        const conclInput = document.getElementById("conclusion") as HTMLInputElement;
         const resEl = document.getElementById("result");
         console.log(premInput.value, conclInput.value);
 
-        const res = proofcheck(
-            appState.root,
-            premInput.value,
-            conclInput.value,
-        );
+        const res = proofcheck(appState.root, premInput.value, conclInput.value);
         console.log("deductionnode:", appState.root);
         if (!resEl) return;
 
@@ -98,12 +76,8 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("clearInputBtn")!.onclick = () => {
-        const premInput = document.getElementById(
-            "premises",
-        ) as HTMLInputElement;
-        const conclInput = document.getElementById(
-            "conclusion",
-        ) as HTMLInputElement;
+        const premInput = document.getElementById("premises") as HTMLInputElement;
+        const conclInput = document.getElementById("conclusion") as HTMLInputElement;
         const resEl = document.getElementById("result");
 
         premInput.value = "";
@@ -178,11 +152,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!isPanning) return;
 
         const { scale, offsetX, offsetY } = getTransform();
-        setTransform(
-            scale,
-            offsetX + e.clientX - lastX,
-            offsetY + e.clientY - lastY,
-        );
+        setTransform(scale, offsetX + e.clientX - lastX, offsetY + e.clientY - lastY);
 
         lastX = e.clientX;
         lastY = e.clientY;

@@ -71,10 +71,7 @@ body {
 .app {
     display: grid;
     background: var(--bg);
-    grid-template-columns: minmax(100px, 170px) minmax(0, 1fr) minmax(
-            100px,
-            170px
-        );
+    grid-template-columns: minmax(100px, 170px) minmax(0, 1fr) minmax(100px, 170px);
     height: 100vh;
     gap: 12px;
     padding: 12px;

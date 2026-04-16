@@ -33,11 +33,7 @@ export function fitTreeToViewport() {
 
         const { scale, offsetX, offsetY } = getTransform();
 
-        const requiredScale = Math.min(
-            (vw - padding) / treeW,
-            (vh - padding) / treeH,
-            1,
-        );
+        const requiredScale = Math.min((vw - padding) / treeW, (vh - padding) / treeH, 1);
 
         if (requiredScale < scale) {
             setTransform(requiredScale, offsetX, offsetY);

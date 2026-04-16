@@ -7,9 +7,7 @@ const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const stylesHandler = isProduction
-    ? MiniCssExtractPlugin.loader
-    : "style-loader";
+const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : "style-loader";
 
 /** @type {import("webpack").Configuration} */
 const config = {

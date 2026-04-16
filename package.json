@@ -1,23 +1,23 @@
 {
-    "name": "DeDucktion",
-    "scripts": {
-        "build": "webpack --mode=production --config-node-env=production",
-        "build:dev": "webpack --mode=development",
-        "serve": "webpack serve",
-        "watch": "webpack --watch"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "2.4.12",
-        "@wasm-tool/wasm-pack-plugin": "^1.7.0",
-        "css-loader": "^7.1.4",
-        "html-loader": "^5.1.0",
-        "html-webpack-plugin": "^5.6.6",
-        "mini-css-extract-plugin": "^2.10.2",
-        "style-loader": "^4.0.0",
-        "ts-loader": "^9.5.4",
-        "typescript": "^6.0.2",
-        "webpack": "^5.105.4",
-        "webpack-cli": "^7.0.2",
-        "webpack-dev-server": "^5.2.3"
-    }
+  "name": "DeDucktion",
+  "scripts": {
+    "build": "webpack --mode=production --config-node-env=production",
+    "build:dev": "webpack --mode=development",
+    "serve": "webpack serve",
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.12",
+    "@wasm-tool/wasm-pack-plugin": "^1.7.0",
+    "css-loader": "^7.1.4",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.6",
+    "mini-css-extract-plugin": "^2.10.2",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^6.0.2",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.3"
+  }
 }
