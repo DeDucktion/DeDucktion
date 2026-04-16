@@ -1,7 +1,7 @@
 use chumsky::prelude::*;
 use chumsky::text::{ident, keyword};
 
-use crate::formula::parser::settings::{ParsingSettings, VariableStyle};
+use super::settings::{ParsingSettings, VariableStyle};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {

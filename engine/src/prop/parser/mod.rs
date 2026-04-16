@@ -1,7 +1,7 @@
 use chumsky::input::ValueInput;
 use chumsky::prelude::*;
 
-use crate::formula::{BinaryConnective, Formula, UnaryConnective};
+use super::formula::{BinaryConnective, Formula, UnaryConnective};
 
 use lexer::Token;
 use settings::ParsingSettings;
