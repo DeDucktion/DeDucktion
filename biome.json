@@ -10,8 +10,8 @@
     },
     "formatter": {
         "enabled": true,
-        "indentStyle": "space",
-        "indentWidth": 4
+        "lineWidth": 100,
+        "indentStyle": "space"
     },
     "linter": {
         "enabled": true,
@@ -24,7 +24,18 @@
     },
     "javascript": {
         "formatter": {
-            "quoteStyle": "double"
+            "quoteStyle": "double",
+            "indentWidth": 4
+        }
+    },
+    "css": {
+        "formatter": {
+            "indentWidth": 4
+        }
+    },
+    "json": {
+        "formatter": {
+            "indentWidth": 2
         }
     },
     "assist": {
