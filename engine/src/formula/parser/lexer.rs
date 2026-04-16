@@ -1,7 +1,7 @@
 use chumsky::prelude::*;
 use chumsky::text::{ident, keyword};
 
-use crate::formula::parser::settings::ParsingSettings;
+use crate::formula::parser::settings::{ParsingSettings, VariableStyle};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
@@ -46,16 +46,16 @@ fn variable<'src>(
     settings: &ParsingSettings,
 ) -> impl Parser<'src, &'src str, Token, extra::Err<Rich<'src, char>>> {
     let var_matcher = match settings.variable_style {
-        super::settings::VariableStyle::Letter => any().map(|c: char| c.to_string()).boxed(),
-        super::settings::VariableStyle::UpperLetter => any()
+        VariableStyle::Letter => any().map(|c: char| c.to_string()).boxed(),
+        VariableStyle::UpperLetter => any()
             .filter(|c: &char| c.is_uppercase())
             .map(|c| c.to_string())
             .boxed(),
-        super::settings::VariableStyle::LowerLetter => any()
+        VariableStyle::LowerLetter => any()
             .filter(|c: &char| c.is_lowercase())
             .map(|c| c.to_string())
             .boxed(),
-        super::settings::VariableStyle::Ident => ident().map(|s: &str| s.to_string()).boxed(),
+        VariableStyle::Ident => ident().map(|s: &str| s.to_string()).boxed(),
     };
 
     var_matcher.map(Token::Var)
