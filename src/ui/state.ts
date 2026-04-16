@@ -1,5 +1,5 @@
-import type { DeductionNode } from "../logic/syntax.ts";
-import { getTransform, setTransform } from "./zoom.ts";
+import type { DeductionNode } from "../logic/syntax";
+import { getTransform, setTransform } from "./zoom";
 
 type HistoryEntry = {
     tree: DeductionNode;
