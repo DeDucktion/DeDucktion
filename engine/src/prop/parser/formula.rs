@@ -6,7 +6,7 @@ use crate::prop::formula::{BinaryConnective, Formula, UnaryConnective};
 use super::lexer::Token;
 use super::settings::{ParenthesizationStyle, ParsingSettings};
 
-/// Parses a formula that may be marked as discharged
+/// Parses a formula of propositional logic.
 pub fn formula_parser<'tok, I>(
     settings: &ParsingSettings,
 ) -> impl Parser<'tok, I, Formula, extra::Err<Rich<'tok, Token>>>
