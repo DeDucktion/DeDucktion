@@ -1,3 +1,6 @@
+alias c := check
+alias fmt := format
+
 dev:
 	npm run serve
 
@@ -23,4 +26,8 @@ check-ci: check-engine
 
 [working-directory: "engine"]
 check-engine:
-	cargo fmt --check
+	cargo fmt --check --all
+	cargo check --all
+
+configure-git-hooks:
+	git config core.hooksPath scripts/git-hooks
