@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-
     // Environment Settings
     "module": "ESNext",
     "target": "ES2020",

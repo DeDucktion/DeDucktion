@@ -19,7 +19,6 @@
     --accent-soft: #244468;
 
     --radius: 14px;
-
 }
 
 /* Light */
@@ -72,8 +71,7 @@ body {
 .app {
     display: grid;
     background: var(--bg);
-    grid-template-columns:
-        minmax(100px, 170px) minmax(0, 1fr) minmax(100px, 170px);
+    grid-template-columns: minmax(100px, 170px) minmax(0, 1fr) minmax(100px, 170px);
     height: 100vh;
     gap: 12px;
     padding: 12px;
@@ -104,33 +102,6 @@ body {
 
 .panel {
     border-left: 1px solid var(--border-glass);
-}
-
-/* Rulebuttons */
-
-#rules button {
-    display: block;
-    width: 100%;
-    margin-bottom: 6px;
-    padding: 8px 10px;
-
-    background: var(--bg-grey);
-    color: var(--text);
-
-    border: 1px solid var(--border-glass);
-    border-radius: 10px;
-
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-#rules button:hover {
-    background: var(--bg-soft);
-    border-color: var(--accent);
-}
-
-#rules button:active {
-    transform: scale(0.98);
 }
 
 /* Main */
@@ -168,6 +139,25 @@ body {
     border-bottom: 1px solid var(--border-glass);
 }
 
+/* Inputs */
+input {
+    background: var(--bg-grey);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 6px 8px;
+    color: var(--text);
+    outline: none;
+}
+
+input::placeholder {
+    color: var(--text-muted);
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
 /* Actionbar, Toolbar */
 .actionbar {
     display: flex;
@@ -203,25 +193,6 @@ body {
     border-radius: 8px;
     padding: 6px 10px;
     color: var(--text);
-}
-
-/* Inputs */
-input {
-    background: var(--bg-grey);
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 6px 8px;
-    color: var(--text);
-    outline: none;
-}
-
-input::placeholder {
-    color: var(--text-muted);
-}
-
-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 /* Title */
@@ -264,6 +235,32 @@ input:focus {
     position: relative;
     width: 100%;
     height: 100%;
+}
+
+/* Rulebuttons */
+#rules button {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 8px 10px;
+
+    background: var(--bg-grey);
+    color: var(--text);
+
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+#rules button:hover {
+    background: var(--bg-soft);
+    border-color: var(--accent);
+}
+
+#rules button:active {
+    transform: scale(0.98);
 }
 
 /* Prooftree */
@@ -346,7 +343,7 @@ input:focus {
     overflow-y: auto;
 }
 
-.panel-section+.panel-section {
+.panel-section + .panel-section {
     border-top: 1px solid var(--border-glass);
 }
 

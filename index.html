@@ -1,9 +1,7 @@
-<import>
-
-    <!doctype html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <script>
-        (function () {
+        (() => {
             const saved = localStorage.getItem("theme");
             const theme = saved ?? "dark";
             document.documentElement.setAttribute("data-theme", theme);
@@ -31,14 +29,14 @@
                         <h2>Natural Deduction Calculator</h2>
                     </div>
                     <div class="actionbar">
-                        <button id="validateBtn">Validate</button>
-                        <button id="practiceBtn">Practice</button>
-                        <button id="clearTreeBtn">Clear Tree</button>
-                        <button id="clearInputBtn">Clear Input</button>
-                        <button id="undoBtn">Undo</button>
-                        <button id="convertTexBtn">Convert to LaTex</button>
-                        <button id="convertTypBtn">Convert to Typst</button>
-                        <button id="themeToggle">Theme</button>
+                        <button type="button" id="validateBtn">Validate</button>
+                        <button type="button" id="practiceBtn">Practice</button>
+                        <button type="button" id="clearTreeBtn">Clear Tree</button>
+                        <button type="button" id="clearInputBtn">Clear Input</button>
+                        <button type="button" id="undoBtn">Undo</button>
+                        <button type="button" id="convertTexBtn">Convert to LaTex</button>
+                        <button type="button" id="convertTypBtn">Convert to Typst</button>
+                        <button type="button" id="themeToggle">Theme</button>
                     </div>
 
                     <div class="toolbar">
@@ -93,5 +91,4 @@
 
         </div>
     </body>
-
-    </html>
+</html>

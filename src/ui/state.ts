@@ -3,7 +3,7 @@ import { getTransform, setTransform } from "./zoom";
 
 type HistoryEntry = {
     tree: DeductionNode;
-    transform: { scale: number; offsetX: number; offsetY: number }
+    transform: { scale: number; offsetX: number; offsetY: number };
 };
 
 export class AppState {
@@ -11,13 +11,11 @@ export class AppState {
     selectedNode: DeductionNode | null = null;
     history: HistoryEntry[] = [];
 
-    constructor() { }
-
     createNode(ruleName: string, arity: number): DeductionNode {
         const node: DeductionNode = {
             rule: ruleName,
             premises: Array.from({ length: arity }, () => this.emptyNode()),
-            conclusion: null
+            conclusion: null,
         };
         return node;
     }
@@ -26,7 +24,7 @@ export class AppState {
         return {
             rule: null,
             premises: [],
-            conclusion: null
+            conclusion: null,
         };
     }
 
@@ -38,7 +36,7 @@ export class AppState {
         if (this.root) {
             this.history.push({
                 tree: structuredClone(this.root),
-                transform: getTransform()
+                transform: getTransform(),
             });
         }
     }
@@ -48,10 +46,6 @@ export class AppState {
         if (!entry) return;
 
         this.root = entry.tree;
-        setTransform(
-            entry.transform.scale,
-            entry.transform.offsetX,
-            entry.transform.offsetY
-        );
+        setTransform(entry.transform.scale, entry.transform.offsetX, entry.transform.offsetY);
     }
 }

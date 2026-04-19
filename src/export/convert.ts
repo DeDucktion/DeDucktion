@@ -1,5 +1,5 @@
-import type { Formula, DeductionNode } from "../logic/syntax";
 import { getRule } from "../logic/deduction-rules";
+import type { DeductionNode, Formula } from "../logic/syntax";
 
 /// Typst
 
@@ -35,7 +35,7 @@ export function nodeToCurryst(node: DeductionNode): string {
         throw new Error(`Unknown rule: ${node.rule}`);
     }
 
-    const premises = node.premises.map(p => nodeToCurryst(p));
+    const premises = node.premises.map((p) => nodeToCurryst(p));
 
     return `rule(
     name: $${rule.typstlabel}$,
@@ -59,21 +59,25 @@ export function formulaToLaTex(f: Formula): string {
         case "not":
             return `\\lnot ${formulaToLaTex(f.sub)}`;
         case "and":
-            return `(${formulaToLaTex(f.left)} \\land ${formulaToLaTex(f.right)})`
+            return `(${formulaToLaTex(f.left)} \\land ${formulaToLaTex(f.right)})`;
         case "or":
-            return `(${formulaToLaTex(f.left)} \\lor ${formulaToLaTex(f.right)})`
+            return `(${formulaToLaTex(f.left)} \\lor ${formulaToLaTex(f.right)})`;
         case "cond":
-            return `(${formulaToLaTex(f.left)} \\to ${formulaToLaTex(f.right)})`
+            return `(${formulaToLaTex(f.left)} \\to ${formulaToLaTex(f.right)})`;
     }
     return "";
 }
 
 function infCommand(arity: number): string {
     switch (arity) {
-        case 0: return "";
-        case 1: return "\\UnaryInfC";
-        case 2: return "\\BinaryInfC";
-        case 3: return "\\TrinaryInfC";
+        case 0:
+            return "";
+        case 1:
+            return "\\UnaryInfC";
+        case 2:
+            return "\\BinaryInfC";
+        case 3:
+            return "\\TrinaryInfC";
         default:
             throw new Error(`Unsupported arity: ${arity}`);
     }
@@ -81,7 +85,7 @@ function infCommand(arity: number): string {
 
 export function nodeToBussproof(node: DeductionNode): string {
     if (!node.conclusion) {
-        throw new Error("Node without conclusion cannot be exported")
+        throw new Error("Node without conclusion cannot be exported");
     }
 
     const concl = `$${formulaToLaTex(node.conclusion)}$`;

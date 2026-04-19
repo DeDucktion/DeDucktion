@@ -1,8 +1,6 @@
 // Syntax
 
-export type Term =
-    | { kind: "var", name: string }
-    | { kind: "const"; name: string };
+export type Term = { kind: "var"; name: string } | { kind: "const"; name: string };
 
 export type Formula =
     | { kind: "atom"; pred: string; args: Term[] }
@@ -33,7 +31,7 @@ export function tokenize(expr: string): string[] | null {
         "[BCDEFGHIJKLMNOPQRSTUVWXYZ](?:_\\d+)?(?:\\^\\d+)?(?:[xyz](?:_\\d+)?)+",
         "[BCDEFGHIJKLMNOPQRSTUVWXYZ](?:_\\d+)?(?:\\^\\d+)?",
         "[xyz](?:_\\d+)?",
-        "\\s+"
+        "\\s+",
     ];
 
     const combined = tokenPatterns.join("|");
@@ -42,7 +40,10 @@ export function tokenize(expr: string): string[] | null {
     const tokens: string[] = [];
     let match: RegExpExecArray | null;
 
-    while ((match = regex.exec(expr)) !== null) {
+    while (true) {
+        match = regex.exec(expr);
+        if (match == null) break;
+
         const tok = match[0];
         if (!tok.match(/^\s+$/)) {
             tokens.push(tok);
@@ -91,8 +92,8 @@ export function parseFormula(input: string): Formula | null {
                 return t === "∧"
                     ? { kind: "and", left, right }
                     : t === "∨"
-                        ? { kind: "or", left, right }
-                        : { kind: "cond", left, right }
+                      ? { kind: "or", left, right }
+                      : { kind: "cond", left, right };
             }
         }
     }
@@ -108,7 +109,7 @@ function parseAtom(tokens: string[]) {
     if (!m) return null;
 
     const pred = m[0];
-    const arity = m[4] ? parseInt(m[4]) : 0;
+    const arity = m[4] ? parseInt(m[4], 10) : 0;
 
     const args: Term[] = [];
     let i = 1;
@@ -123,16 +124,16 @@ function parseAtom(tokens: string[]) {
 
     return {
         formula: { kind: "atom", pred, args } as const,
-        rest: tokens.slice(i)
+        rest: tokens.slice(i),
     };
 }
 
 export function FormulatoString(f: Formula): string {
     switch (f.kind) {
         case "atom":
-            return f.pred + f.args.map(a => a.name).join("");
+            return f.pred + f.args.map((a) => a.name).join("");
         case "not":
-            return "¬" + FormulatoString(f.sub);
+            return `¬${FormulatoString(f.sub)}`;
         case "and":
             return `(${FormulatoString(f.left)}∧${FormulatoString(f.right)})`;
         case "or":
@@ -162,23 +163,11 @@ export function equal(a: Formula, b: Formula): boolean {
             return b.kind === "not" && equal(a.sub, b.sub);
 
         case "and":
-            return (
-                b.kind === "and" &&
-                equal(a.left, b.left) &&
-                equal(a.right, b.right)
-            );
+            return b.kind === "and" && equal(a.left, b.left) && equal(a.right, b.right);
         case "or":
-            return (
-                b.kind === "or" &&
-                equal(a.left, b.left) &&
-                equal(a.right, b.right)
-            );
+            return b.kind === "or" && equal(a.left, b.left) && equal(a.right, b.right);
         case "cond":
-            return (
-                b.kind === "cond" &&
-                equal(a.left, b.left) &&
-                equal(a.right, b.right)
-            );
+            return b.kind === "cond" && equal(a.left, b.left) && equal(a.right, b.right);
     }
     return false;
 }

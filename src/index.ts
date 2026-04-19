@@ -1,17 +1,17 @@
-import { AppState } from "./ui/state";
-import { renderRuleList, renderTree, adjustAllRuleLines, attachKeyboardShortcuts } from "./ui/ui";
+import { treeToBussproof, treeToCurryst } from "./export/convert";
 import { proofcheck } from "./logic/deduction-rules";
-import { treeToCurryst, treeToBussproof } from "./export/convert";
-import { getTransform, setTransform, fitTreeToViewport, centerTree } from "./ui/zoom";
+import { AppState } from "./ui/state";
+import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui/ui";
+import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./ui/zoom";
 
 import "../index.css";
 
 export const appState = new AppState();
 
 const transformLayer = document.getElementById("transformLayer")!;
-let scale = 1;
-let offsetX = 0;
-let offsetY = 0;
+const scale = 1;
+const offsetX = 0;
+const offsetY = 0;
 let isPanning = false;
 let lastX = 0;
 let lastY = 0;
@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
     appState.selectedNode = null;
 
     renderTree(document.getElementById("canvas")!);
-    updateTransform()
+    updateTransform();
     renderTree(document.getElementById("canvas")!);
 
     window.addEventListener("resize", () => {
@@ -64,8 +64,8 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("practiceBtn")!.onclick = () => {
-        // TODO: Picks a random instance of a dataset with premises and conclusions 
-    }
+        // TODO: Picks a random instance of a dataset with premises and conclusions
+    };
 
     document.getElementById("clearTreeBtn")!.onclick = () => {
         appState.root = null;
@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", () => {
         appState.history = [];
         renderTree(document.getElementById("canvas")!);
         centerTree();
-    }
+    };
 
     document.getElementById("clearInputBtn")!.onclick = () => {
         const premInput = document.getElementById("premises") as HTMLInputElement;
@@ -83,7 +83,7 @@ window.addEventListener("DOMContentLoaded", () => {
         premInput.value = "";
         conclInput.value = "";
         if (resEl) resEl.textContent = "No validation yet";
-    }
+    };
 
     document.getElementById("convertTypBtn")!.onclick = async () => {
         if (!appState.root) {
@@ -113,31 +113,34 @@ window.addEventListener("DOMContentLoaded", () => {
             alert("Latex code copied to clipboard");
         } catch (e) {
             console.error(e);
-            alert("Export faild")
+            alert("Export faild");
         }
-    }
+    };
 
     // Zoom and dragable
     const viewport = document.getElementById("proofViewport")!;
 
+    viewport.addEventListener(
+        "wheel",
+        (e) => {
+            e.preventDefault();
 
-    viewport.addEventListener("wheel", (e) => {
-        e.preventDefault();
+            const rect = viewport.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
 
-        const rect = viewport.getBoundingClientRect();
-        const mx = e.clientX - rect.left;
-        const my = e.clientY - rect.top;
+            const { scale, offsetX, offsetY } = getTransform();
 
-        const { scale, offsetX, offsetY } = getTransform();
+            const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+            const newScale = Math.min(3, Math.max(0.2, scale * zoomFactor));
 
-        const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-        const newScale = Math.min(3, Math.max(0.2, scale * zoomFactor));
+            const nx = mx - ((mx - offsetX) / scale) * newScale;
+            const ny = my - ((my - offsetY) / scale) * newScale;
 
-        const nx = mx - ((mx - offsetX) / scale) * newScale;
-        const ny = my - ((my - offsetY) / scale) * newScale;
-
-        setTransform(newScale, nx, ny);
-    }, { passive: false });
+            setTransform(newScale, nx, ny);
+        },
+        { passive: false },
+    );
 
     viewport.addEventListener("mousedown", (e) => {
         isPanning = true;
@@ -149,30 +152,25 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!isPanning) return;
 
         const { scale, offsetX, offsetY } = getTransform();
-        setTransform(
-            scale,
-            offsetX + e.clientX - lastX,
-            offsetY + e.clientY - lastY
-        );
+        setTransform(scale, offsetX + e.clientX - lastX, offsetY + e.clientY - lastY);
 
         lastX = e.clientX;
         lastY = e.clientY;
     });
 
-    window.addEventListener("mouseup", () => isPanning = false);
+    window.addEventListener("mouseup", () => (isPanning = false));
 
     // Theme
     const toggle = document.getElementById("themeToggle")!;
-        toggle.onclick = () => {
-            const root = document.documentElement;
-            const next =
-                root.dataset.theme === "light" ? "dark" : "light";
+    toggle.onclick = () => {
+        const root = document.documentElement;
+        const next = root.dataset.theme === "light" ? "dark" : "light";
 
-            root.dataset.theme = next;
-            localStorage.setItem("theme", next);
-        };
+        root.dataset.theme = next;
+        localStorage.setItem("theme", next);
+    };
     const saved = localStorage.getItem("theme");
-        if (saved) {
-            document.documentElement.dataset.theme = saved;
-        }
+    if (saved) {
+        document.documentElement.dataset.theme = saved;
+    }
 });

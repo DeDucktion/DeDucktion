@@ -1,5 +1,5 @@
 import type { DeductionNode, Formula } from "./syntax";
-import { parseFormula, equal } from "./syntax";
+import { equal, parseFormula } from "./syntax";
 
 // Deduction-Rules
 
@@ -7,8 +7,8 @@ export interface DeductionRule {
     name: string;
     arity: number;
     label: string;
-    latexlabel: string,
-    typstlabel: string,
+    latexlabel: string;
+    typstlabel: string;
     check: RuleCheck;
 }
 
@@ -23,12 +23,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "and I",
         check: (p, C) => {
             const [A, B] = p;
-            return (
-                C.kind === "and" &&
-                equal(C.left, A!) &&
-                equal(C.right, B!)
-            );
-        }
+            return C.kind === "and" && equal(C.left, A!) && equal(C.right, B!);
+        },
     },
     {
         name: "and-eli1",
@@ -38,11 +34,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "and E 1",
         check: (P, c) => {
             const [L] = P;
-            return (
-                L!.kind === "and" &&
-                equal(L!.left, c)
-            )
-        }
+            return L!.kind === "and" && equal(L!.left, c);
+        },
     },
     {
         name: "and-eli2",
@@ -52,11 +45,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "and E 2",
         check: (P, c) => {
             const [L] = P;
-            return (
-                L!.kind === "and" &&
-                equal(L!.right, c)
-            )
-        }
+            return L!.kind === "and" && equal(L!.right, c);
+        },
     },
     {
         name: "or-intro1",
@@ -66,11 +56,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "or I 1",
         check: (P, c) => {
             const [L] = P;
-            return (
-                c.kind === "or" &&
-                equal(c.left, L!)
-            )
-        }
+            return c.kind === "or" && equal(c.left, L!);
+        },
     },
     {
         name: "or-intro2",
@@ -80,11 +67,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "or I 2",
         check: (P, c) => {
             const [L] = P;
-            return (
-                c.kind === "or" &&
-                equal(c.right, L!)
-            )
-        }
+            return c.kind === "or" && equal(c.right, L!);
+        },
     },
     {
         name: "or-eli",
@@ -94,12 +78,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "or E",
         check: (P, c) => {
             const [A, B, C] = P;
-            return (
-                A!.kind === "or" &&
-                equal(B!, c) &&
-                equal(C!, c)
-            )
-        }
+            return A!.kind === "or" && equal(B!, c) && equal(C!, c);
+        },
     },
     {
         name: "cond-intro",
@@ -109,11 +89,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "-> I",
         check: (P, c) => {
             const [A] = P;
-            return (
-                c.kind === "cond" &&
-                equal(c.right, A!)
-            )
-        }
+            return c.kind === "cond" && equal(c.right, A!);
+        },
     },
     {
         name: "cond-eli",
@@ -123,12 +100,8 @@ export const Rules: DeductionRule[] = [
         typstlabel: "-> E",
         check: (P, c) => {
             const [A, B] = P;
-            return (
-                A!.kind === "cond" &&
-                equal(A!.left, B!) &&
-                equal(A!.right, c)
-            )
-        }
+            return A!.kind === "cond" && equal(A!.left, B!) && equal(A!.right, c);
+        },
     },
     {
         name: "neg-intro",
@@ -140,13 +113,10 @@ export const Rules: DeductionRule[] = [
             const [A, B] = P;
             return (
                 c.kind === "not" &&
-                ((A!.kind === "not" &&
-                    equal(A!.sub, B!)
-                ) || (B!.kind === "not" &&
-                    equal(B!.sub, A!)
-                    ))
-            )
-        }
+                ((A!.kind === "not" && equal(A!.sub, B!)) ||
+                    (B!.kind === "not" && equal(B!.sub, A!)))
+            );
+        },
     },
     {
         name: "neg-eli",
@@ -154,20 +124,16 @@ export const Rules: DeductionRule[] = [
         label: "¬E",
         latexlabel: "\\lnot E",
         typstlabel: "not E",
-        check: (P, c) => {
+        check: (P, _c) => {
             const [A, B] = P;
             return (
-                (A!.kind === "not" &&
-                    equal(A!.sub, B!)
-                ) || (B!.kind === "not" &&
-                    equal(B!.sub, A!)
-                )
-            )
-        }
-    }
-]
+                (A!.kind === "not" && equal(A!.sub, B!)) || (B!.kind === "not" && equal(B!.sub, A!))
+            );
+        },
+    },
+];
 
-const RuleMap = new Map(Rules.map(r => [r.name, r]));
+const RuleMap = new Map(Rules.map((r) => [r.name, r]));
 
 export function getRule(name: string): DeductionRule | undefined {
     return RuleMap.get(name);
@@ -177,13 +143,13 @@ export function validate(node: DeductionNode): boolean | null {
     if (!node.rule || !node.conclusion) return null;
 
     const rule = node.rule ? getRule(node.rule) : undefined;
-    
+
     if (!rule) return null;
 
     if (node.premises.length !== rule.arity) return false;
 
-    const premises = node.premises.map(p => p.conclusion);
-    if (premises.some(p => p == null)) return null;
+    const premises = node.premises.map((p) => p.conclusion);
+    if (premises.some((p) => p == null)) return null;
 
     return rule.check(premises as Formula[], node.conclusion);
 }
@@ -193,7 +159,7 @@ type Context = Formula[];
 export function validateTree(node: DeductionNode, context: Context): boolean | null {
     if (!node.rule) {
         if (!node.conclusion) return null;
-        return context.some(f => equal(f, node.conclusion!))
+        return context.some((f) => equal(f, node.conclusion!));
     }
 
     if (!node.conclusion) return null;
@@ -211,7 +177,7 @@ export function validateTree(node: DeductionNode, context: Context): boolean | n
 
     if (node.rule === "neg-eli") {
         if (!node.conclusion) return null;
-        nextContext = [...context, { kind: "not", sub: node.conclusion }]
+        nextContext = [...context, { kind: "not", sub: node.conclusion }];
     }
 
     if (node.rule === "or-eli") {
@@ -261,7 +227,11 @@ export function parseConclusion(input: string): Formula | null {
     return parseFormula(input.trim());
 }
 
-export function proofcheck(root: DeductionNode | null, premisesInput: string, conclusionInput: string): boolean | null {
+export function proofcheck(
+    root: DeductionNode | null,
+    premisesInput: string,
+    conclusionInput: string,
+): boolean | null {
     if (!root) return null;
 
     const premises = parsePremises(premisesInput);
@@ -277,4 +247,4 @@ export function proofcheck(root: DeductionNode | null, premisesInput: string, co
     if (!equal(root.conclusion, concl)) return false;
 
     return true;
-}    
+}
