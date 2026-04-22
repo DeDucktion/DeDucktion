@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 use crate::derivation::{GenericDerivation, RawDerivation};
 use crate::prop;
 use crate::prop::parser::settings::ParsingSettings;
@@ -29,6 +31,7 @@ impl Derivation {
 
 /// A judgement in an ND derivation is essentially just a formula of [prop].
 /// Additionally, it holds the information whether it is a discharged assumption.
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Judgement {
     pub formula: prop::Formula,
     pub discharged: bool,

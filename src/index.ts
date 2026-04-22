@@ -5,6 +5,7 @@ import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree
 import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./ui/zoom";
 
 import "../index.css";
+import { parse_derivation } from "engine";
 
 export const appState = new AppState();
 
@@ -54,6 +55,8 @@ document.getElementById("validateBtn")!.onclick = () => {
     console.log(premInput.value, conclInput.value);
 
     console.log(JSON.stringify(appState.root));
+    const parsed = parse_derivation(appState.root);
+    console.log(parsed);
 
     // const res = proofcheck(appState.root, premInput.value, conclInput.value);
     // console.log("deductionnode:", appState.root);
