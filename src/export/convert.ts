@@ -19,36 +19,36 @@ export function formulaToTypst(f: Formula): string {
     return "";
 }
 
-export function nodeToCurryst(node: DeductionNode): string {
-    if (!node.conclusion) {
-        throw new Error("Node without conclusion cannot be exported");
-    }
+// export function nodeToCurryst(node: DeductionNode): string {
+//     if (!node.conclusion) {
+//         throw new Error("Node without conclusion cannot be exported");
+//     }
+//
+//     const concl = `$${formulaToTypst(node.conclusion)}$`;
+//
+//     if (!node.rule) {
+//         return concl;
+//     }
+//
+//     const rule = getRule(node.rule);
+//     if (!rule) {
+//         throw new Error(`Unknown rule: ${node.rule}`);
+//     }
+//
+//     const premises = node.premises.map((p) => nodeToCurryst(p));
+//
+//     return `rule(
+//     name: $${rule.typstlabel}$,
+//     ${premises.join(",\n")},
+//     ${concl}
+//     )`;
+// }
 
-    const concl = `$${formulaToTypst(node.conclusion)}$`;
-
-    if (!node.rule) {
-        return concl;
-    }
-
-    const rule = getRule(node.rule);
-    if (!rule) {
-        throw new Error(`Unknown rule: ${node.rule}`);
-    }
-
-    const premises = node.premises.map((p) => nodeToCurryst(p));
-
-    return `rule(
-    name: $${rule.typstlabel}$,
-    ${premises.join(",\n")},
-    ${concl}
-    )`;
-}
-
-export function treeToCurryst(root: DeductionNode): string {
-    return `#prooftree(
-    ${nodeToCurryst(root)}
-    )`;
-}
+// export function treeToCurryst(root: DeductionNode): string {
+//     return `#prooftree(
+//     ${nodeToCurryst(root)}
+//     )`;
+// }
 
 /// LaTex
 
@@ -83,39 +83,39 @@ function infCommand(arity: number): string {
     }
 }
 
-export function nodeToBussproof(node: DeductionNode): string {
-    if (!node.conclusion) {
-        throw new Error("Node without conclusion cannot be exported");
-    }
-
-    const concl = `$${formulaToLaTex(node.conclusion)}$`;
-
-    if (!node.rule) {
-        return `\\AxiomC{${concl}}`;
-    }
-
-    const rule = getRule(node.rule);
-    if (!rule) {
-        throw new Error("Unknown rule");
-    }
-
-    const parts: string[] = [];
-
-    for (const p of node.premises) {
-        parts.push(nodeToBussproof(p));
-    }
-
-    parts.push(`\\RightLabel{$${rule.latexlabel}$}`);
-
-    parts.push(`${infCommand(rule.arity)}{${concl}}`);
-
-    return parts.join("\n");
-}
-
-export function treeToBussproof(root: DeductionNode): string {
-    return `
-    \\begin{prooftree}
-    ${nodeToBussproof(root)}
-    \\end{prooftree}
-    `.trim();
-}
+// export function nodeToBussproof(node: DeductionNode): string {
+//     if (!node.conclusion) {
+//         throw new Error("Node without conclusion cannot be exported");
+//     }
+//
+//     const concl = `$${formulaToLaTex(node.conclusion)}$`;
+//
+//     if (!node.rule) {
+//         return `\\AxiomC{${concl}}`;
+//     }
+//
+//     const rule = getRule(node.rule);
+//     if (!rule) {
+//         throw new Error("Unknown rule");
+//     }
+//
+//     const parts: string[] = [];
+//
+//     for (const p of node.premises) {
+//         parts.push(nodeToBussproof(p));
+//     }
+//
+//     parts.push(`\\RightLabel{$${rule.latexlabel}$}`);
+//
+//     parts.push(`${infCommand(rule.arity)}{${concl}}`);
+//
+//     return parts.join("\n");
+// }
+//
+// export function treeToBussproof(root: DeductionNode): string {
+//     return `
+//     \\begin{prooftree}
+//     ${nodeToBussproof(root)}
+//     \\end{prooftree}
+//     `.trim();
+// }

@@ -139,112 +139,112 @@ export function getRule(name: string): DeductionRule | undefined {
     return RuleMap.get(name);
 }
 
-export function validate(node: DeductionNode): boolean | null {
-    if (!node.rule || !node.conclusion) return null;
-
-    const rule = node.rule ? getRule(node.rule) : undefined;
-
-    if (!rule) return null;
-
-    if (node.premises.length !== rule.arity) return false;
-
-    const premises = node.premises.map((p) => p.conclusion);
-    if (premises.some((p) => p == null)) return null;
-
-    return rule.check(premises as Formula[], node.conclusion);
-}
-
-type Context = Formula[];
-
-export function validateTree(node: DeductionNode, context: Context): boolean | null {
-    if (!node.rule) {
-        if (!node.conclusion) return null;
-        return context.some((f) => equal(f, node.conclusion!));
-    }
-
-    if (!node.conclusion) return null;
-
-    let nextContext = context;
-    if (node.rule === "cond-intro") {
-        if (node.conclusion.kind !== "cond") return false;
-        nextContext = [...context, node.conclusion.left];
-    }
-
-    if (node.rule === "neg-intro") {
-        if (node.conclusion.kind !== "not") return false;
-        nextContext = [...context, node.conclusion.sub];
-    }
-
-    if (node.rule === "neg-eli") {
-        if (!node.conclusion) return null;
-        nextContext = [...context, { kind: "not", sub: node.conclusion }];
-    }
-
-    if (node.rule === "or-eli") {
-        if (node.premises.length !== 3) return false;
-
-        const disj = node.premises[0]?.conclusion;
-        if (!disj || disj.kind !== "or") return false;
-
-        const leftCtx = [...context, disj.left];
-        const rightCtx = [...context, disj.right];
-
-        const r0 = validateTree(node.premises[0]!, context);
-        if (r0 !== true) return r0;
-
-        const r1 = validateTree(node.premises[1]!, leftCtx);
-        if (r1 !== true) return r1;
-
-        const r2 = validateTree(node.premises[2]!, rightCtx);
-        if (r2 !== true) return r2;
-
-        return validate(node);
-    }
-
-    for (const p of node.premises) {
-        const res = validateTree(p, nextContext);
-        if (res !== true) return res;
-    }
-
-    return validate(node);
-}
-
-export function parsePremises(input: string): Formula[] | null {
-    if (input.trim() === "") return [];
-
-    const parts = input.split(",");
-    const formulas: Formula[] = [];
-
-    for (const p of parts) {
-        const f = parseFormula(p.trim());
-        if (!f) return null;
-        formulas.push(f);
-    }
-    return formulas;
-}
-
-export function parseConclusion(input: string): Formula | null {
-    return parseFormula(input.trim());
-}
-
-export function proofcheck(
-    root: DeductionNode | null,
-    premisesInput: string,
-    conclusionInput: string,
-): boolean | null {
-    if (!root) return null;
-
-    const premises = parsePremises(premisesInput);
-    if (!premises) return null;
-
-    const concl = parseConclusion(conclusionInput);
-    if (!concl) return null;
-
-    const val = validateTree(root, premises);
-    if (val !== true) return val;
-
-    if (!root.conclusion) return null;
-    if (!equal(root.conclusion, concl)) return false;
-
-    return true;
-}
+// export function validate(node: DeductionNode): boolean | null {
+//     if (!node.rule || !node.conclusion) return null;
+//
+//     const rule = node.rule ? getRule(node.rule) : undefined;
+//
+//     if (!rule) return null;
+//
+//     if (node.premises.length !== rule.arity) return false;
+//
+//     const premises = node.premises.map((p) => p.conclusion);
+//     if (premises.some((p) => p == null)) return null;
+//
+//     return rule.check(premises as Formula[], node.conclusion);
+// }
+//
+// type Context = Formula[];
+//
+// export function validateTree(node: DeductionNode, context: Context): boolean | null {
+//     if (!node.rule) {
+//         if (!node.conclusion) return null;
+//         return context.some((f) => equal(f, node.conclusion!));
+//     }
+//
+//     if (!node.conclusion) return null;
+//
+//     let nextContext = context;
+//     if (node.rule === "cond-intro") {
+//         if (node.conclusion.kind !== "cond") return false;
+//         nextContext = [...context, node.conclusion.left];
+//     }
+//
+//     if (node.rule === "neg-intro") {
+//         if (node.conclusion.kind !== "not") return false;
+//         nextContext = [...context, node.conclusion.sub];
+//     }
+//
+//     if (node.rule === "neg-eli") {
+//         if (!node.conclusion) return null;
+//         nextContext = [...context, { kind: "not", sub: node.conclusion }];
+//     }
+//
+//     if (node.rule === "or-eli") {
+//         if (node.premises.length !== 3) return false;
+//
+//         const disj = node.premises[0]?.conclusion;
+//         if (!disj || disj.kind !== "or") return false;
+//
+//         const leftCtx = [...context, disj.left];
+//         const rightCtx = [...context, disj.right];
+//
+//         const r0 = validateTree(node.premises[0]!, context);
+//         if (r0 !== true) return r0;
+//
+//         const r1 = validateTree(node.premises[1]!, leftCtx);
+//         if (r1 !== true) return r1;
+//
+//         const r2 = validateTree(node.premises[2]!, rightCtx);
+//         if (r2 !== true) return r2;
+//
+//         return validate(node);
+//     }
+//
+//     for (const p of node.premises) {
+//         const res = validateTree(p, nextContext);
+//         if (res !== true) return res;
+//     }
+//
+//     return validate(node);
+// }
+//
+// export function parsePremises(input: string): Formula[] | null {
+//     if (input.trim() === "") return [];
+//
+//     const parts = input.split(",");
+//     const formulas: Formula[] = [];
+//
+//     for (const p of parts) {
+//         const f = parseFormula(p.trim());
+//         if (!f) return null;
+//         formulas.push(f);
+//     }
+//     return formulas;
+// }
+//
+// export function parseConclusion(input: string): Formula | null {
+//     return parseFormula(input.trim());
+// }
+//
+// export function proofcheck(
+//     root: DeductionNode | null,
+//     premisesInput: string,
+//     conclusionInput: string,
+// ): boolean | null {
+//     if (!root) return null;
+//
+//     const premises = parsePremises(premisesInput);
+//     if (!premises) return null;
+//
+//     const concl = parseConclusion(conclusionInput);
+//     if (!concl) return null;
+//
+//     const val = validateTree(root, premises);
+//     if (val !== true) return val;
+//
+//     if (!root.conclusion) return null;
+//     if (!equal(root.conclusion, concl)) return false;
+//
+//     return true;
+// }

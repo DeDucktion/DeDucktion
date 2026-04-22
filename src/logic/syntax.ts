@@ -15,8 +15,7 @@ export type Formula =
 export interface DeductionNode {
     rule: string | null;
     premises: DeductionNode[];
-    conclusion: Formula | null;
-    assumption?: boolean;
+    conclusion: string | null;
 }
 
 export function tokenize(expr: string): string[] | null {

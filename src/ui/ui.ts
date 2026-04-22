@@ -115,10 +115,9 @@ function renderNode(node: DeductionNode): HTMLElement {
     // Conclusion
     const conclusion = document.createElement("input");
     conclusion.className = "conclusion-input";
-    conclusion.value = node.conclusion ? FormulatoString(node.conclusion) : "";
+    conclusion.value = node.conclusion ? node.conclusion : "";
     conclusion.oninput = () => {
-        const parsed = parseFormula(conclusion.value);
-        node.conclusion = parsed;
+        node.conclusion = conclusion.value;
     };
     attachKeyboardShortcuts(conclusion);
     wrapper.appendChild(conclusion);
