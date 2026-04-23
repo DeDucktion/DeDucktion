@@ -1,8 +1,6 @@
-// import { treeToBussproof, treeToCurryst } from "./export/convert";
-// import { proofcheck } from "./logic/deduction-rules";
-import { AppState } from "./ui/state";
-import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui/ui";
-import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./ui/zoom";
+import { AppState } from "./state";
+import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
+import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
 import { parse_derivation } from "engine";
@@ -51,20 +49,17 @@ document.getElementById("undoBtn")!.onclick = () => {
 document.getElementById("validateBtn")!.onclick = () => {
     const premInput = document.getElementById("premises") as HTMLInputElement;
     const conclInput = document.getElementById("conclusion") as HTMLInputElement;
-    const resEl = document.getElementById("result");
+    const resEl = document.getElementById("result")!;
     console.log(premInput.value, conclInput.value);
 
-    console.log(JSON.stringify(appState.root));
+    // TODO: validation
     const parsed = parse_derivation(appState.root);
     console.log(parsed);
+    const res = true;
 
-    // const res = proofcheck(appState.root, premInput.value, conclInput.value);
-    // console.log("deductionnode:", appState.root);
-    // if (!resEl) return;
-    //
-    // if (res === true) resEl.textContent = "Correct proof";
-    // else if (res === false) resEl.textContent = "Incorrect proof";
-    // else resEl.textContent = "Syntax Error";
+    if (res === true) resEl.textContent = "Correct proof";
+    else if (res === false) resEl.textContent = "Incorrect proof";
+    else resEl.textContent = "Syntax Error";
 };
 
 document.getElementById("practiceBtn")!.onclick = () => {
@@ -89,37 +84,13 @@ document.getElementById("clearInputBtn")!.onclick = () => {
     if (resEl) resEl.textContent = "No validation yet";
 };
 
-// document.getElementById("convertTypBtn")!.onclick = async () => {
-//     if (!appState.root) {
-//         alert("No prooftree to export");
-//         return;
-//     }
-//
-//     try {
-//         const typst = treeToCurryst(appState.root);
-//         await navigator.clipboard.writeText(typst);
-//         alert("Typst code copied to clipboard");
-//     } catch (e) {
-//         console.error(e);
-//         alert("Export faild");
-//     }
-// };
-//
-// document.getElementById("convertTexBtn")!.onclick = async () => {
-//     if (!appState.root) {
-//         alert("No prooftree to export");
-//         return;
-//     }
-//
-//     try {
-//         const latex = treeToBussproof(appState.root);
-//         await navigator.clipboard.writeText(latex);
-//         alert("Latex code copied to clipboard");
-//     } catch (e) {
-//         console.error(e);
-//         alert("Export faild");
-//     }
-// };
+document.getElementById("convertTypBtn")!.onclick = async () => {
+    // TODO: convert to Typst
+};
+
+document.getElementById("convertTexBtn")!.onclick = async () => {
+    // TODO: convert to TeX
+};
 
 // Zoom and dragable
 const viewport = document.getElementById("proofViewport")!;

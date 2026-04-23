@@ -1,7 +1,6 @@
-import { appState } from "..";
-import { getRule, Rules } from "../logic/deduction-rules";
-import type { DeductionNode } from "../logic/syntax";
-import { FormulatoString, parseFormula } from "../logic/syntax";
+import { appState } from ".";
+import { getRule, Rules } from "./rules";
+import type { DeductionNode } from "./state";
 import { centerTree, fitTreeToViewport } from "./zoom";
 
 export function renderRuleList(container: HTMLElement) {

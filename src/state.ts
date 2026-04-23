@@ -1,10 +1,15 @@
-import type { DeductionNode } from "../logic/syntax";
 import { getTransform, setTransform } from "./zoom";
 
 type HistoryEntry = {
     tree: DeductionNode;
     transform: { scale: number; offsetX: number; offsetY: number };
 };
+
+export interface DeductionNode {
+    rule: string | undefined;
+    premises: DeductionNode[];
+    conclusion: string | undefined;
+}
 
 export class AppState {
     root: DeductionNode | null = null;
@@ -15,16 +20,16 @@ export class AppState {
         const node: DeductionNode = {
             rule: ruleName,
             premises: Array.from({ length: arity }, () => this.emptyNode()),
-            conclusion: null,
+            conclusion: undefined,
         };
         return node;
     }
 
     emptyNode(): DeductionNode {
         return {
-            rule: null,
+            rule: undefined,
             premises: [],
-            conclusion: null,
+            conclusion: undefined,
         };
     }
 
