@@ -6,7 +6,7 @@ use crate::prop::parser::settings::ParsingSettings;
 
 pub mod parser;
 
-pub type Derivation = GenericDerivation<Judgement, String>;
+pub type Derivation = GenericDerivation<Judgement, Option<String>>;
 
 impl Derivation {
     pub fn parse(raw: &RawDerivation, settings: &ParsingSettings) -> Result<Self, ()> {
@@ -19,7 +19,8 @@ impl Derivation {
             premises.push(premise);
         }
 
-        let conclusion = Judgement::parse(&raw.conclusion, settings)?;
+        let conclusion = raw.conclusion.as_ref().ok_or(())?;
+        let conclusion = Judgement::parse(conclusion, settings)?;
 
         Ok(Self {
             rule,

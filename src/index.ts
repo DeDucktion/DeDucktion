@@ -53,8 +53,13 @@ document.getElementById("validateBtn")!.onclick = () => {
     console.log(premInput.value, conclInput.value);
 
     // TODO: validation
-    const parsed = parse_derivation(appState.root);
-    console.log(parsed);
+    try {
+        const parsed = parse_derivation(appState.root);
+        console.log(parsed);
+    } catch {
+        console.warn("Could not parse");
+    }
+
     const res = true;
 
     if (res === true) resEl.textContent = "Correct proof";
