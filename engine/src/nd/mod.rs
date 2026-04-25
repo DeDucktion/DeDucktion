@@ -5,6 +5,7 @@ use crate::prop;
 use crate::prop::parser::settings::ParsingSettings;
 
 pub mod parser;
+pub mod rules;
 
 pub type Derivation = GenericDerivation<Judgement, Option<String>>;
 

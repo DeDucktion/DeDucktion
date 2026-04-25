@@ -1,4 +1,4 @@
-pub use formula::Formula;
+pub use formula::{Formula, FormulaPattern};
 
-mod formula;
+pub mod formula;
 pub mod parser;

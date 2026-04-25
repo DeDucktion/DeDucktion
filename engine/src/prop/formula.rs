@@ -22,6 +22,29 @@ pub enum Formula {
     },
 }
 
+/// A formula pattern of propositional logic that can contain meta-variables.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum FormulaPattern {
+    /// An atomic proposition symbol.
+    Prop(String),
+
+    /// A unary connective.
+    Unary {
+        connective: UnaryConnective,
+        arg: Box<FormulaPattern>,
+    },
+
+    /// A binary connective.
+    Binary {
+        connective: BinaryConnective,
+        lhs: Box<FormulaPattern>,
+        rhs: Box<FormulaPattern>,
+    },
+
+    /// A meta-variable representing some formula.
+    Meta(String),
+}
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum UnaryConnective {
     /// Negation.
