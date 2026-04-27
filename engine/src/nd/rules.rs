@@ -1,5 +1,5 @@
-use crate::prop::FormulaPattern;
 use crate::prop::formula::BinaryConnective;
+use crate::prop::pattern::FormulaPattern;
 
 /// An inference rule.
 pub struct Rule {
