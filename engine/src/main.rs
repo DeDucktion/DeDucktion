@@ -1,4 +1,5 @@
-use deducktion_engine::prop::{Formula, parser::settings::ParsingSettings};
+use deducktion_engine::prop::formula::Formula;
+use deducktion_engine::prop::parser::settings::ParsingSettings;
 
 fn main() {
     let settings = ParsingSettings::default();

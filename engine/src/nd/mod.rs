@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::derivation::{GenericDerivation, RawDerivation};
-use crate::prop;
+use crate::prop::formula::Formula;
 use crate::prop::parser::settings::ParsingSettings;
 
 pub mod parser;
@@ -35,6 +35,6 @@ impl Derivation {
 /// Additionally, it holds the information whether it is a discharged assumption.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Judgement {
-    pub formula: prop::Formula,
+    pub formula: Formula,
     pub discharged: bool,
 }

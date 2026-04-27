@@ -1,4 +1,4 @@
-use crate::prop::Formula;
+use crate::prop::formula::Formula;
 
 use chumsky::Parser;
 pub use formula::formula_parser;
