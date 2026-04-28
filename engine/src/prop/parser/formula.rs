@@ -4,7 +4,7 @@ use chumsky::prelude::*;
 use crate::prop::formula::{BinaryConnective, Formula, UnaryConnective};
 
 use super::lexer::Token;
-use super::settings::{ParenthesizationStyle, ParsingSettings};
+use super::settings::{ParenStyle, ParsingSettings};
 
 /// Parses a formula of propositional logic.
 pub fn formula_parser<'tok, I>(
@@ -13,9 +13,9 @@ pub fn formula_parser<'tok, I>(
 where
     I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
 {
-    match settings.parenthesization_style {
-        ParenthesizationStyle::Strict => formula_strict().boxed(),
-        ParenthesizationStyle::Lax => formula_lax().boxed(),
+    match settings.paren_style {
+        ParenStyle::Strict => formula_strict().boxed(),
+        ParenStyle::Lax => formula_lax().boxed(),
     }
 }
 
@@ -25,7 +25,7 @@ where
     I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
 {
     recursive(|formula| {
-        let var = select! { Token::Var(var) => Formula::Var(var) };
+        let prop = select! { Token::Prop(prop) => Formula::Prop(prop) };
 
         let unary = unary_connective()
             .then(formula.clone())
@@ -45,7 +45,7 @@ where
                 rhs: Box::new(rhs),
             });
 
-        choice((var, unary, binary))
+        choice((prop, unary, binary))
     })
 }
 
