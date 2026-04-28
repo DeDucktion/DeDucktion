@@ -1,7 +1,7 @@
 use chumsky::prelude::*;
 use chumsky::text::{ident, keyword};
 
-use super::settings::{ParsingSettings, VariableStyle};
+use super::settings::{ParsingSettings, PropStyle};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
@@ -15,7 +15,7 @@ pub enum Token {
     Imp,
     Not,
 
-    Var(String),
+    Prop(String),
 }
 
 pub fn lexer<'src>(
@@ -32,31 +32,31 @@ pub fn lexer<'src>(
         choice((just("→"), keyword("not"), just("~"), just("!"))).to(Token::Not),
     ));
 
-    let var = variable(settings);
+    let prop = proposition(settings);
 
     simple
-        .or(var)
+        .or(prop)
         .padded()
         .recover_with(skip_then_retry_until(any().ignored(), end()))
         .repeated()
         .collect()
 }
 
-fn variable<'src>(
+fn proposition<'src>(
     settings: &ParsingSettings,
 ) -> impl Parser<'src, &'src str, Token, extra::Err<Rich<'src, char>>> {
-    let var_matcher = match settings.variable_style {
-        VariableStyle::Letter => any().map(|c: char| c.to_string()).boxed(),
-        VariableStyle::UpperLetter => any()
+    let prop_matcher = match settings.prop_style {
+        PropStyle::Letter => any().map(|c: char| c.to_string()).boxed(),
+        PropStyle::UpperLetter => any()
             .filter(|c: &char| c.is_uppercase())
             .map(|c| c.to_string())
             .boxed(),
-        VariableStyle::LowerLetter => any()
+        PropStyle::LowerLetter => any()
             .filter(|c: &char| c.is_lowercase())
             .map(|c| c.to_string())
             .boxed(),
-        VariableStyle::Ident => ident().map(|s: &str| s.to_string()).boxed(),
+        PropStyle::Ident => ident().map(|s: &str| s.to_string()).boxed(),
     };
 
-    var_matcher.map(Token::Var)
+    prop_matcher.map(Token::Prop)
 }
