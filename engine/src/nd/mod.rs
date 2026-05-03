@@ -7,6 +7,8 @@ use crate::nd::rules::Rule;
 use crate::prop::formula::Formula;
 use crate::prop::parser::settings::ParsingSettings;
 
+pub use crate::nd::rules::RULES;
+
 pub mod parser;
 pub mod rules;
 

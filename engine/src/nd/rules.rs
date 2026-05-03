@@ -1,5 +1,15 @@
+use std::collections::HashMap;
+use std::sync::LazyLock;
+
 use crate::prop::formula::BinaryConnective;
 use crate::prop::pattern::FormulaPattern;
+
+pub static RULES: LazyLock<HashMap<String, Rule>> = LazyLock::new(|| {
+    HashMap::from([
+        (String::from("nd.and.intro"), and_intro()),
+        (String::from("nd.or.elim"), or_elim()),
+    ])
+});
 
 /// An inference rule.
 #[derive(Debug, Clone, PartialEq, Hash)]
@@ -18,7 +28,7 @@ pub struct Premise {
     pub assumptions: Vec<FormulaPattern>,
 }
 
-/// Example: inference rule for conjunction introduction.
+/// Introduction rule for conjunction.
 pub fn and_intro() -> Rule {
     Rule {
         premises: vec![
@@ -39,6 +49,7 @@ pub fn and_intro() -> Rule {
     }
 }
 
+/// Elimination rule for disjunction.
 pub fn or_elim() -> Rule {
     Rule {
         premises: vec![
