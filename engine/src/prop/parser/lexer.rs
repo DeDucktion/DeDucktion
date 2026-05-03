@@ -29,7 +29,7 @@ pub fn lexer<'src>(
         choice((just("∧"), keyword("and"), just("<"))).to(Token::And),
         choice((just("∨"), keyword("or"), just(">"))).to(Token::Or),
         choice((just("→"), keyword("to"), keyword("implies"), just("->"))).to(Token::Imp),
-        choice((just("→"), keyword("not"), just("~"), just("!"))).to(Token::Not),
+        choice((just("¬"), keyword("not"), just("~"), just("!"))).to(Token::Not),
     ));
 
     let prop = proposition(settings);

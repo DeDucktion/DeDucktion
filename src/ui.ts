@@ -1,7 +1,6 @@
-import { appState } from "..";
-import { getRule, Rules } from "../logic/deduction-rules";
-import type { DeductionNode } from "../logic/syntax";
-import { FormulatoString, parseFormula } from "../logic/syntax";
+import { appState } from ".";
+import { getRule, Rules } from "./rules";
+import type { DeductionNode } from "./state";
 import { centerTree, fitTreeToViewport } from "./zoom";
 
 export function renderRuleList(container: HTMLElement) {
@@ -115,10 +114,9 @@ function renderNode(node: DeductionNode): HTMLElement {
     // Conclusion
     const conclusion = document.createElement("input");
     conclusion.className = "conclusion-input";
-    conclusion.value = node.conclusion ? FormulatoString(node.conclusion) : "";
+    conclusion.value = node.conclusion ? node.conclusion : "";
     conclusion.oninput = () => {
-        const parsed = parseFormula(conclusion.value);
-        node.conclusion = parsed;
+        node.conclusion = conclusion.value;
     };
     attachKeyboardShortcuts(conclusion);
     wrapper.appendChild(conclusion);
