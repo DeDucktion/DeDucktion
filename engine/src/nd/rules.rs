@@ -2,12 +2,14 @@ use crate::prop::formula::BinaryConnective;
 use crate::prop::pattern::FormulaPattern;
 
 /// An inference rule.
+#[derive(Debug, Clone, PartialEq, Hash)]
 pub struct Rule {
     pub premises: Vec<Premise>,
     pub conclusion: FormulaPattern,
 }
 
 /// A premise of a [Rule].
+#[derive(Debug, Clone, PartialEq, Hash)]
 pub struct Premise {
     /// The syntax of the premise.
     pub pattern: FormulaPattern,

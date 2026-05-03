@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 /// A formula of propositional logic.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Formula {
     /// An atomic proposition symbol.
     Prop(String),
@@ -22,13 +22,13 @@ pub enum Formula {
     },
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum UnaryConnective {
     /// Negation.
     Not,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum BinaryConnective {
     /// Conjunction.
     And,

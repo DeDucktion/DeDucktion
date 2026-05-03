@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::prop::formula::{BinaryConnective, Formula, UnaryConnective};
 
 /// A formula pattern of propositional logic that can contain meta-variables.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub enum FormulaPattern {
     /// An atomic proposition symbol.
     Prop(String),
@@ -63,6 +63,26 @@ impl FormulaPattern {
                 }
             }
             _ => false,
+        }
+    }
+
+    pub fn substitute(self, bindings: &HashMap<String, Formula>) -> Option<Formula> {
+        match self {
+            FormulaPattern::Prop(prop) => Some(Formula::Prop(prop)),
+            FormulaPattern::Unary { connective, arg } => Some(Formula::Unary {
+                connective,
+                arg: Box::new(arg.substitute(bindings)?),
+            }),
+            FormulaPattern::Binary {
+                connective,
+                lhs,
+                rhs,
+            } => Some(Formula::Binary {
+                connective,
+                lhs: Box::new(lhs.substitute(bindings)?),
+                rhs: Box::new(rhs.substitute(bindings)?),
+            }),
+            FormulaPattern::Meta(meta) => bindings.get(&meta).cloned(),
         }
     }
 }
