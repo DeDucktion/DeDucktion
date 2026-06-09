@@ -61,7 +61,6 @@ document.getElementById("validateBtn")!.onclick = () => {
             validate(appState.derivation, premises.value, conclusion.value);
             res = true;
         } catch {
-            console.warn("Not validated");
             res = false;
         }
     }

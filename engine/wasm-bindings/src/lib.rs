@@ -55,13 +55,13 @@ pub fn validate(
 
     let premises = prop::Formula::parse_list(&premises, &ParsingSettings::default())
         .map_err(|_| JsValue::undefined())?;
-    let premises = HashSet::from_iter(premises.into_iter());
+    let premises = HashSet::from_iter(premises);
 
     let conclusion = prop::Formula::parse(&conclusion, &ParsingSettings::default())
         .map_err(|_| JsValue::undefined())?;
 
     derivation
-        .check(&*nd::RULES_MAP, &premises, &HashSet::new())
+        .check(&nd::RULES_MAP, &premises, &HashSet::new())
         .ok_or(JsValue::undefined())?;
 
     if conclusion != derivation.conclusion.formula {

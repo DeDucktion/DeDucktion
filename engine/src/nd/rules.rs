@@ -23,7 +23,7 @@ pub static RULES: LazyLock<Vec<(String, Rule)>> = LazyLock::new(|| {
 });
 
 pub static RULES_MAP: LazyLock<HashMap<String, Rule>> =
-    LazyLock::new(|| HashMap::from_iter(RULES.clone().into_iter()));
+    LazyLock::new(|| HashMap::from_iter(RULES.clone()));
 
 /// An inference rule.
 #[derive(Debug, Clone, PartialEq, Hash)]
