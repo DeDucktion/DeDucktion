@@ -49,19 +49,13 @@ impl Derivation {
 
         // valid proof leaf
         if rule.is_none() && premises.is_empty() {
-            return if conclusion.discharged {
-                if local_context.contains(&conclusion.formula) {
-                    Some(())
-                } else {
-                    None
-                }
+            let context = if conclusion.discharged {
+                &local_context
             } else {
-                if global_context.contains(&conclusion.formula) {
-                    Some(())
-                } else {
-                    None
-                }
+                &global_context
             };
+
+            return context.contains(&conclusion.formula).then_some(());
         }
 
         let rule = rule.as_ref().and_then(|rule| rules.get(rule))?;

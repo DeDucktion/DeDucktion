@@ -28,5 +28,5 @@ fn main() {
     context.insert(Formula::parse("a", &settings).unwrap());
     context.insert(Formula::parse("b", &settings).unwrap());
 
-    dbg!(proof.check(&*nd::RULES, &context, &HashSet::new()));
+    dbg!(proof.check(&nd::RULES, &context, &HashSet::new()));
 }
