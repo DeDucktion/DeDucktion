@@ -8,52 +8,52 @@ export interface DeductionRule {
 
 export const Rules: DeductionRule[] = [
     {
-        name: "and-intro",
+        name: "nd.and.intro",
         arity: 2,
         label: "∧I",
     },
     {
-        name: "and-eli1",
+        name: "nd.and.elim.1",
         arity: 1,
         label: "∧E1",
     },
     {
-        name: "and-eli2",
+        name: "nd.and.elim.2",
         arity: 1,
         label: "∧E2",
     },
     {
-        name: "or-intro1",
+        name: "nd.or.intro.1",
         arity: 1,
         label: "∨I1",
     },
     {
-        name: "or-intro2",
+        name: "nd.or.intro.2",
         arity: 1,
         label: "∨I2",
     },
     {
-        name: "or-eli",
+        name: "nd.or.elim",
         arity: 3,
         label: "∨E",
     },
     {
-        name: "cond-intro",
+        name: "nd.imp.intro",
         arity: 1,
         label: "→I",
     },
     {
-        name: "cond-eli",
+        name: "nd.imp.elim",
         arity: 2,
         label: "→E",
     },
     {
-        name: "neg-intro",
+        name: "nd.neg.intro",
         arity: 2,
         label: "¬I",
     },
     {
-        name: "neg-eli",
+        name: "nd.neg.elim",
         arity: 2,
         label: "¬E",
     },
