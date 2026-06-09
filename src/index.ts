@@ -3,7 +3,7 @@ import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree
 import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
-import { parse_derivation } from "engine";
+import { validate } from "engine";
 
 export const appState = new AppState();
 
@@ -47,20 +47,21 @@ document.getElementById("undoBtn")!.onclick = () => {
 };
 
 document.getElementById("validateBtn")!.onclick = () => {
-    const premInput = document.getElementById("premises") as HTMLInputElement;
-    const conclInput = document.getElementById("conclusion") as HTMLInputElement;
+    const premises = document.getElementById("premises") as HTMLInputElement;
+    const conclusion = document.getElementById("conclusion") as HTMLInputElement;
     const resEl = document.getElementById("result")!;
-    console.log(premInput.value, conclInput.value);
 
-    // TODO: validation
-    try {
-        const parsed = parse_derivation(appState.root);
-        console.log(parsed);
-    } catch {
-        console.warn("Could not parse");
+    let res = false;
+
+    if (appState.derivation) {
+        try {
+            validate(appState.derivation, premises.value, conclusion.value);
+            res = true;
+        } catch {
+            console.warn("Not validated");
+            res = false;
+        }
     }
-
-    const res = true;
 
     if (res === true) resEl.textContent = "Correct proof";
     else if (res === false) resEl.textContent = "Incorrect proof";
