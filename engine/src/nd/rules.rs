@@ -25,6 +25,7 @@ pub static RULES: LazyLock<HashMap<String, Rule>> = LazyLock::new(|| {
 /// An inference rule.
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub struct Rule {
+    pub label: String,
     pub premises: Vec<Premise>,
     pub conclusion: FormulaPattern,
 }
@@ -42,6 +43,7 @@ pub struct Premise {
 /// Introduction rule for conjunction.
 pub fn and_intro() -> Rule {
     Rule {
+        label: "∧I".to_string(),
         premises: vec![
             Premise {
                 pattern: meta("A"),
@@ -59,6 +61,7 @@ pub fn and_intro() -> Rule {
 /// Elimination rule for conjuction (left).
 pub fn and_elim1() -> Rule {
     Rule {
+        label: "∧E1".to_string(),
         premises: vec![Premise {
             pattern: binary(meta("A"), And, meta("B")),
             assumptions: vec![],
@@ -70,6 +73,7 @@ pub fn and_elim1() -> Rule {
 /// Elimination rule for conjuction (right).
 pub fn and_elim2() -> Rule {
     Rule {
+        label: "∧E2".to_string(),
         premises: vec![Premise {
             pattern: binary(meta("A"), And, meta("B")),
             assumptions: vec![],
@@ -81,6 +85,7 @@ pub fn and_elim2() -> Rule {
 /// Introduction rule for disjunction (left).
 pub fn or_intro1() -> Rule {
     Rule {
+        label: "∨I1".to_string(),
         premises: vec![Premise {
             pattern: meta("A"),
             assumptions: vec![],
@@ -92,6 +97,7 @@ pub fn or_intro1() -> Rule {
 /// Introduction rule for disjunction (left).
 pub fn or_intro2() -> Rule {
     Rule {
+        label: "∨I2".to_string(),
         premises: vec![Premise {
             pattern: meta("B"),
             assumptions: vec![],
@@ -103,6 +109,7 @@ pub fn or_intro2() -> Rule {
 /// Elimination rule for disjunction.
 pub fn or_elim() -> Rule {
     Rule {
+        label: "∨E".to_string(),
         premises: vec![
             Premise {
                 pattern: binary(meta("A"), Or, meta("B")),
@@ -124,6 +131,7 @@ pub fn or_elim() -> Rule {
 /// Introduction rule for implication.
 pub fn imp_intro() -> Rule {
     Rule {
+        label: "→I".to_string(),
         premises: vec![Premise {
             pattern: meta("B"),
             assumptions: vec![meta("A")],
@@ -135,6 +143,7 @@ pub fn imp_intro() -> Rule {
 /// Elimination rule for implication.
 pub fn imp_elim() -> Rule {
     Rule {
+        label: "→E".to_string(),
         premises: vec![
             Premise {
                 pattern: binary(meta("A"), Imp, meta("B")),
@@ -152,6 +161,7 @@ pub fn imp_elim() -> Rule {
 /// Introduction rule for negation.
 pub fn neg_intro() -> Rule {
     Rule {
+        label: "¬I".to_string(),
         premises: vec![
             Premise {
                 pattern: meta("B"),
@@ -169,6 +179,7 @@ pub fn neg_intro() -> Rule {
 /// Introduction rule for negation.
 pub fn neg_elim() -> Rule {
     Rule {
+        label: "¬E".to_string(),
         premises: vec![
             Premise {
                 pattern: meta("B"),
