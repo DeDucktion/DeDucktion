@@ -27,7 +27,7 @@ const conclusionInput = document.getElementById("conclusion") as HTMLInputElemen
 attachKeyboardShortcuts(premisesInput);
 attachKeyboardShortcuts(conclusionInput);
 
-appState.root = null;
+appState.derivation = null;
 appState.selectedNode = null;
 
 renderTree(document.getElementById("canvas")!);
@@ -72,7 +72,7 @@ document.getElementById("practiceBtn")!.onclick = () => {
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
-    appState.root = null;
+    appState.derivation = null;
     appState.selectedNode = null;
     appState.history = [];
     renderTree(document.getElementById("canvas")!);

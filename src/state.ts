@@ -1,23 +1,24 @@
 import { getTransform, setTransform } from "./zoom";
 
 type HistoryEntry = {
-    tree: DeductionNode;
+    tree: Derivation;
     transform: { scale: number; offsetX: number; offsetY: number };
 };
 
-export interface DeductionNode {
+// see RawDerivation in the engine
+export interface Derivation {
     rule: string | undefined;
-    premises: DeductionNode[];
+    premises: Derivation[];
     conclusion: string | undefined;
 }
 
 export class AppState {
-    root: DeductionNode | null = null;
-    selectedNode: DeductionNode | null = null;
+    derivation: Derivation | null = null;
+    selectedNode: Derivation | null = null;
     history: HistoryEntry[] = [];
 
-    createNode(ruleName: string, arity: number): DeductionNode {
-        const node: DeductionNode = {
+    createNode(ruleName: string, arity: number): Derivation {
+        const node: Derivation = {
             rule: ruleName,
             premises: Array.from({ length: arity }, () => this.emptyNode()),
             conclusion: undefined,
@@ -25,7 +26,7 @@ export class AppState {
         return node;
     }
 
-    emptyNode(): DeductionNode {
+    emptyNode(): Derivation {
         return {
             rule: undefined,
             premises: [],
@@ -33,14 +34,14 @@ export class AppState {
         };
     }
 
-    setSelected(node: DeductionNode) {
+    setSelected(node: Derivation) {
         this.selectedNode = node;
     }
 
     pushHistory() {
-        if (this.root) {
+        if (this.derivation) {
             this.history.push({
-                tree: structuredClone(this.root),
+                tree: structuredClone(this.derivation),
                 transform: getTransform(),
             });
         }
@@ -50,7 +51,7 @@ export class AppState {
         const entry = this.history.pop();
         if (!entry) return;
 
-        this.root = entry.tree;
+        this.derivation = entry.tree;
         setTransform(entry.transform.scale, entry.transform.offsetX, entry.transform.offsetY);
     }
 }

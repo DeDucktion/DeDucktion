@@ -1,6 +1,6 @@
 import { appState } from ".";
 import { getRule, Rules } from "./rules";
-import type { DeductionNode } from "./state";
+import type { Derivation } from "./state";
 import { centerTree, fitTreeToViewport } from "./zoom";
 
 export function renderRuleList(container: HTMLElement) {
@@ -12,7 +12,7 @@ export function renderRuleList(container: HTMLElement) {
             appState.pushHistory();
             const newNode = appState.createNode(rule.name, rule.arity);
             if (!appState.selectedNode) {
-                appState.root = newNode;
+                appState.derivation = newNode;
                 appState.selectedNode = newNode;
             } else {
                 Object.assign(appState.selectedNode, newNode);
@@ -64,8 +64,8 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
 let firstcenter = false;
 export function renderTree(container: HTMLElement, doFit = true) {
     container.innerHTML = "";
-    if (!appState.root) return;
-    const node = renderNode(appState.root);
+    if (!appState.derivation) return;
+    const node = renderNode(appState.derivation);
     container.appendChild(node);
     requestAnimationFrame(() => {
         adjustAllRuleLines();
@@ -79,7 +79,7 @@ export function renderTree(container: HTMLElement, doFit = true) {
     });
 }
 
-function renderNode(node: DeductionNode): HTMLElement {
+function renderNode(node: Derivation): HTMLElement {
     const wrapper = document.createElement("div");
     wrapper.className = "tree-node";
 
