@@ -7,8 +7,8 @@ use crate::prop::formula::UnaryConnective;
 use crate::prop::formula::UnaryConnective::*;
 use crate::prop::pattern::FormulaPattern;
 
-pub static RULES: LazyLock<HashMap<String, Rule>> = LazyLock::new(|| {
-    HashMap::from([
+pub static RULES: LazyLock<Vec<(String, Rule)>> = LazyLock::new(|| {
+    vec![
         (String::from("nd.and.intro"), and_intro()),
         (String::from("nd.and.elim.1"), and_elim1()),
         (String::from("nd.and.elim.2"), and_elim2()),
@@ -19,8 +19,11 @@ pub static RULES: LazyLock<HashMap<String, Rule>> = LazyLock::new(|| {
         (String::from("nd.imp.elim"), imp_elim()),
         (String::from("nd.neg.intro"), neg_intro()),
         (String::from("nd.neg.elim"), neg_elim()),
-    ])
+    ]
 });
+
+pub static RULES_MAP: LazyLock<HashMap<String, Rule>> =
+    LazyLock::new(|| HashMap::from_iter(RULES.clone().into_iter()));
 
 /// An inference rule.
 #[derive(Debug, Clone, PartialEq, Hash)]

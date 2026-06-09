@@ -3,9 +3,12 @@ import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree
 import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
-import { validate } from "engine";
+import { get_rules, type Rule, validate } from "engine";
 
 export const appState = new AppState();
+
+export const rules: Rule[] = get_rules();
+export const rule_map = new Map(rules.map((r) => [r.id, r]));
 
 const transformLayer = document.getElementById("transformLayer")!;
 const scale = 1;

@@ -1,16 +1,15 @@
-import { appState } from ".";
-import { getRule, Rules } from "./rules";
+import { appState, rule_map, rules } from ".";
 import type { Derivation } from "./state";
 import { centerTree, fitTreeToViewport } from "./zoom";
 
 export function renderRuleList(container: HTMLElement) {
     container.innerHTML = "";
-    for (const rule of Rules) {
+    for (const rule of rules) {
         const btn = document.createElement("button");
         btn.textContent = rule.label;
         btn.onclick = () => {
             appState.pushHistory();
-            const newNode = appState.createNode(rule.name, rule.arity);
+            const newNode = appState.createNode(rule.id, rule.arity);
             if (!appState.selectedNode) {
                 appState.derivation = newNode;
                 appState.selectedNode = newNode;
@@ -103,8 +102,8 @@ function renderNode(node: Derivation): HTMLElement {
     const label = document.createElement("span");
     label.className = "rule-label";
     if (node.rule) {
-        console.log(Rules);
-        label.textContent = getRule(node.rule) ? getRule(node.rule)!.label : node.rule;
+        const rule = rule_map.get(node.rule);
+        label.textContent = rule ? rule!.label : node.rule;
         ruleLine.appendChild(line);
         ruleLine.appendChild(label);
     }
