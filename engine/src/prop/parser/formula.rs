@@ -19,6 +19,18 @@ where
     }
 }
 
+/// Parses a list of formulas of propositional logic.
+pub fn formula_list_parser<'tok, I>(
+    settings: &ParsingSettings,
+) -> impl Parser<'tok, I, Vec<Formula>, extra::Err<Rich<'tok, Token>>>
+where
+    I: ValueInput<'tok, Token = Token, Span = SimpleSpan>,
+{
+    formula_parser(settings)
+        .separated_by(just(Token::Comma))
+        .collect()
+}
+
 // Fully parenthesized formula.
 fn formula_strict<'tok, I>() -> impl Parser<'tok, I, Formula, extra::Err<Rich<'tok, Token>>> + Clone
 where

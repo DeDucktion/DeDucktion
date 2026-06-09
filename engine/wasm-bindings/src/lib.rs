@@ -1,8 +1,10 @@
+use std::collections::HashSet;
+
 use wasm_bindgen::prelude::*;
 
 use deducktion_engine::derivation::RawDerivation;
-use deducktion_engine::nd;
 use deducktion_engine::prop::parser::settings::ParsingSettings;
+use deducktion_engine::{nd, prop};
 
 #[wasm_bindgen]
 pub fn parse_derivation(derivation: JsValue) -> Result<JsValue, JsValue> {

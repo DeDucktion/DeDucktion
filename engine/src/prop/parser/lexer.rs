@@ -10,6 +10,8 @@ pub enum Token {
     BracketOpen,
     BracketClose,
 
+    Comma,
+
     And,
     Or,
     Imp,
@@ -26,6 +28,7 @@ pub fn lexer<'src>(
         just(')').to(Token::ParenClose),
         just('[').to(Token::BracketOpen),
         just(']').to(Token::BracketClose),
+        just(',').to(Token::Comma),
         choice((just("∧"), keyword("and"), just("<"))).to(Token::And),
         choice((just("∨"), keyword("or"), just(">"))).to(Token::Or),
         choice((just("→"), keyword("to"), keyword("implies"), just("->"))).to(Token::Imp),
