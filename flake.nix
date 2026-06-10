@@ -22,6 +22,7 @@
             clippy
             rustfmt
             rust-analyzer
+            wasm-bindgen-cli
             wasm-pack
             lld
             just
