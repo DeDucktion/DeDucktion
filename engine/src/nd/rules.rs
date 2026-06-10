@@ -19,6 +19,9 @@ pub static RULES: LazyLock<Vec<(String, Rule)>> = LazyLock::new(|| {
         (String::from("nd.imp.elim"), imp_elim()),
         (String::from("nd.neg.intro"), neg_intro()),
         (String::from("nd.neg.elim"), neg_elim()),
+        (String::from("nd.biimp.intro"), biimp_intro()),
+        (String::from("nd.biimp.elim.1"), biimp_elim1()),
+        (String::from("nd.biimp.elim.2"), biimp_elim2()),
     ]
 });
 
@@ -194,6 +197,60 @@ pub fn neg_elim() -> Rule {
             },
         ],
         conclusion: meta("A"),
+    }
+}
+
+/// Introduction rule for biimplication.
+pub fn biimp_intro() -> Rule {
+    Rule {
+        label: "↔I".to_string(),
+        premises: vec![
+            Premise {
+                pattern: meta("B"),
+                assumptions: vec![meta("A")],
+            },
+            Premise {
+                pattern: meta("A"),
+                assumptions: vec![meta("B")],
+            },
+        ],
+        conclusion: binary(meta("A"), Biimp, meta("B")),
+    }
+}
+
+/// Elimination rule for biimplication (left).
+pub fn biimp_elim1() -> Rule {
+    Rule {
+        label: "↔E1".to_string(),
+        premises: vec![
+            Premise {
+                pattern: binary(meta("A"), Biimp, meta("B")),
+                assumptions: vec![],
+            },
+            Premise {
+                pattern: meta("B"),
+                assumptions: vec![],
+            },
+        ],
+        conclusion: meta("A"),
+    }
+}
+
+/// Elimination rule for biimplication (right).
+pub fn biimp_elim2() -> Rule {
+    Rule {
+        label: "↔E2".to_string(),
+        premises: vec![
+            Premise {
+                pattern: binary(meta("A"), Biimp, meta("B")),
+                assumptions: vec![],
+            },
+            Premise {
+                pattern: meta("A"),
+                assumptions: vec![],
+            },
+        ],
+        conclusion: meta("B"),
     }
 }
 

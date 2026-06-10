@@ -38,4 +38,7 @@ pub enum BinaryConnective {
 
     /// Implication.
     Imp,
+
+    /// Biimplication.
+    Biimp,
 }

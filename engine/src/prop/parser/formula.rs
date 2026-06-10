@@ -98,5 +98,6 @@ where
         just(Token::And).to(BinaryConnective::And),
         just(Token::Or).to(BinaryConnective::Or),
         just(Token::Imp).to(BinaryConnective::Imp),
+        just(Token::Biimp).to(BinaryConnective::Biimp),
     ))
 }
