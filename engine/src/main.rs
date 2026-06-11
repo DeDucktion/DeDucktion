@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use deducktion_engine::nd;
+use deducktion_engine::nd::{self, RuleRef};
 use deducktion_engine::prop::formula::Formula;
 use deducktion_engine::prop::parser::settings::ParsingSettings;
 
@@ -8,15 +8,15 @@ fn main() {
     let settings = ParsingSettings::default();
 
     let proof = nd::Derivation {
-        rule: Some(String::from("nd.and.intro")),
+        rule: RuleRef::Id(String::from("nd.and.intro")),
         premises: vec![
             nd::Derivation {
-                rule: None,
+                rule: RuleRef::Axiom,
                 premises: vec![],
                 conclusion: nd::Judgement::parse("a", &settings).unwrap(),
             },
             nd::Derivation {
-                rule: None,
+                rule: RuleRef::Axiom,
                 premises: vec![],
                 conclusion: nd::Judgement::parse("b", &settings).unwrap(),
             },

@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::export::{self, Export};
+
 /// An unparsed derivation tree with [String] nodes.
 pub type RawDerivation = GenericDerivation<Option<String>, Option<String>>;
 
@@ -9,4 +11,42 @@ pub struct GenericDerivation<J, R> {
     pub rule: R,
     pub premises: Vec<GenericDerivation<J, R>>,
     pub conclusion: J,
+}
+
+impl<J, R> Export for GenericDerivation<J, R>
+where
+    J: Export,
+    R: Export,
+{
+    fn export(&self, settings: export::Settings) -> String {
+        match settings.format {
+            export::Format::Typst => {
+                // We use [curryst](https://typst.app/universe/package/curryst/).
+
+                if self.premises.is_empty() {
+                    return format!("${}$", self.conclusion.export(settings.outer()));
+                }
+
+                let premises: Vec<String> = self
+                    .premises
+                    .iter()
+                    .map(|premise| premise.export(settings.inner()))
+                    .collect();
+
+                let rule = format!(
+                    "rule(name: {}, {}, ${}$)",
+                    self.rule.export(settings.outer()),
+                    premises.join(", "),
+                    self.conclusion.export(settings.outer())
+                );
+
+                if settings.outermost {
+                    format!("#prooftree({rule})")
+                } else {
+                    rule
+                }
+            }
+            export::Format::Latex => todo!(),
+        }
+    }
 }

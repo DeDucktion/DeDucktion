@@ -3,6 +3,7 @@ use std::collections::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 
 use crate::derivation::{GenericDerivation, RawDerivation};
+use crate::export::{self, Export};
 use crate::nd::rules::Rule;
 use crate::prop::formula::Formula;
 use crate::prop::parser::settings::ParsingSettings;
@@ -12,12 +13,42 @@ pub use crate::nd::rules::{RULES, RULES_MAP};
 pub mod parser;
 pub mod rules;
 
-pub type Derivation = GenericDerivation<Judgement, Option<String>>;
+pub type Derivation = GenericDerivation<Judgement, RuleRef>;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum RuleRef {
+    Axiom,
+    Id(String),
+}
+
+impl Export for RuleRef {
+    fn export(&self, settings: export::Settings) -> String {
+        if let RuleRef::Id(id) = &self
+            && let Some(rule) = RULES_MAP.get(id)
+        {
+            match settings.format {
+                export::Format::Typst => {
+                    if settings.outermost {
+                        format!("${}$", rule.typst)
+                    } else {
+                        rule.typst.clone()
+                    }
+                }
+                export::Format::Latex => todo!(),
+            }
+        } else {
+            String::new()
+        }
+    }
+}
 
 impl Derivation {
     pub fn parse(raw: &RawDerivation, settings: &ParsingSettings) -> Result<Self, ()> {
-        // TODO: parsing of rule names
-        let rule = raw.rule.clone();
+        let rule = match raw.rule {
+            Some(ref id) if RULES_MAP.contains_key(id) => RuleRef::Id(id.clone()),
+            None if raw.premises.is_empty() => RuleRef::Axiom,
+            _ => return Err(()),
+        };
 
         let mut premises = Vec::with_capacity(raw.premises.len());
         for premise in &raw.premises {
@@ -48,17 +79,26 @@ impl Derivation {
         } = self;
 
         // valid proof leaf
-        if rule.is_none() && premises.is_empty() {
-            let context = if conclusion.discharged {
-                &local_context
-            } else {
-                &global_context
-            };
+        let rule = match rule {
+            RuleRef::Axiom => {
+                // This shouldn't happen by parsing.
+                if !premises.is_empty() {
+                    return None;
+                }
 
-            return context.contains(&conclusion.formula).then_some(());
-        }
+                let context = if conclusion.discharged {
+                    &local_context
+                } else {
+                    &global_context
+                };
 
-        let rule = rule.as_ref().and_then(|rule| rules.get(rule))?;
+                return context.contains(&conclusion.formula).then_some(());
+            }
+            RuleRef::Id(id) => {
+                // This should always work by parsing.
+                rules.get(id)?
+            }
+        };
 
         // check arity
         if premises.len() != rule.premises.len() {
@@ -100,4 +140,14 @@ impl Derivation {
 pub struct Judgement {
     pub formula: Formula,
     pub discharged: bool,
+}
+
+impl Export for Judgement {
+    fn export(&self, settings: export::Settings) -> String {
+        if self.discharged {
+            format!("[{}]", self.formula.export(settings.outer()))
+        } else {
+            self.formula.export(settings)
+        }
+    }
 }
