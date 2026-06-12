@@ -104,7 +104,14 @@ document.getElementById("convertTypBtn")!.onclick = async () => {
 };
 
 document.getElementById("convertTexBtn")!.onclick = async () => {
-    // TODO: convert to TeX
+    try {
+        const latex = export_derivation(appState.derivation, ExportFormat.Latex);
+        await navigator.clipboard.writeText(latex);
+        alert("LaTeX code copied to clipboard");
+    } catch (e) {
+        console.error(e);
+        alert("Export failed");
+    }
 };
 
 // Zoom and dragable

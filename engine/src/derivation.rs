@@ -24,7 +24,7 @@ where
                 // We use [curryst](https://typst.app/universe/package/curryst/).
 
                 if self.premises.is_empty() {
-                    return format!("${}$", self.conclusion.export(settings.outer()));
+                    return format!("{}", self.conclusion.export(settings.outer()));
                 }
 
                 let premises: Vec<String> = self
@@ -34,7 +34,7 @@ where
                     .collect();
 
                 let rule = format!(
-                    "rule(name: {}, {}, ${}$)",
+                    "rule(name: {}, {}, {})",
                     self.rule.export(settings.outer()),
                     premises.join(", "),
                     self.conclusion.export(settings.outer())
@@ -46,7 +46,42 @@ where
                     rule
                 }
             }
-            export::Format::Latex => todo!(),
+            export::Format::Latex => {
+                // We use [bussproofs](https://ctan.org/pkg/bussproofs).
+
+                if self.premises.is_empty() {
+                    return format!(r#"\AxiomC{{{}}}"#, self.conclusion.export(settings.outer()));
+                }
+
+                let premises: Vec<String> = self
+                    .premises
+                    .iter()
+                    .map(|premise| premise.export(settings.inner()))
+                    .collect();
+
+                let arity_command = match premises.len() {
+                    0 => r#"\AxiomC"#,
+                    1 => r#"\UnaryInfC"#,
+                    2 => r#"\BinaryInfC"#,
+                    3 => r#"\TrinaryInfC"#,
+                    // unsupported, but better not to panic.
+                    _ => "",
+                };
+
+                let rule = format!(
+                    "{}\n\\RightLabel{{{}}}\n{}{{{}}}",
+                    premises.join("\n"),
+                    self.rule.export(settings.outer()),
+                    arity_command,
+                    self.conclusion.export(settings.outer())
+                );
+
+                if settings.outermost {
+                    format!("\\begin{{prooftree}}\n{rule}\n\\end{{prooftree}}")
+                } else {
+                    rule
+                }
+            }
         }
     }
 }

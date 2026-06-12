@@ -26,15 +26,14 @@ impl Export for RuleRef {
         if let RuleRef::Id(id) = &self
             && let Some(rule) = RULES_MAP.get(id)
         {
-            match settings.format {
-                export::Format::Typst => {
-                    if settings.outermost {
-                        format!("${}$", rule.typst)
-                    } else {
-                        rule.typst.clone()
-                    }
-                }
-                export::Format::Latex => todo!(),
+            let label = match settings.format {
+                export::Format::Typst => rule.typst.clone(),
+                export::Format::Latex => rule.latex.clone(),
+            };
+            if settings.outermost {
+                format!("${}$", label)
+            } else {
+                label
             }
         } else {
             String::new()

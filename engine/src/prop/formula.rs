@@ -48,7 +48,7 @@ use crate::export::{self, Export};
 
 impl Export for Formula {
     fn export(&self, settings: export::Settings) -> String {
-        match self {
+        let formula = match self {
             Formula::Prop(prop) => prop.clone(),
             Formula::Unary { connective, arg } => {
                 format!(
@@ -74,6 +74,12 @@ impl Export for Formula {
                     format!("({binary})")
                 }
             }
+        };
+
+        if settings.outermost {
+            format!("${formula}$")
+        } else {
+            formula
         }
     }
 }
