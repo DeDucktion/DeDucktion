@@ -1,10 +1,16 @@
+use std::collections::{HashMap, HashSet};
+
 use serde::{Deserialize, Serialize};
 
 use crate::derivation::{GenericDerivation, RawDerivation};
-use crate::prop;
+use crate::nd::rules::Rule;
+use crate::prop::formula::Formula;
 use crate::prop::parser::settings::ParsingSettings;
 
+pub use crate::nd::rules::{RULES, RULES_MAP};
+
 pub mod parser;
+pub mod rules;
 
 pub type Derivation = GenericDerivation<Judgement, Option<String>>;
 
@@ -28,12 +34,70 @@ impl Derivation {
             conclusion,
         })
     }
+
+    pub fn check(
+        &self,
+        rules: &HashMap<String, Rule>,
+        global_context: &HashSet<Formula>,
+        local_context: &HashSet<Formula>,
+    ) -> Option<()> {
+        let Self {
+            rule,
+            premises,
+            conclusion,
+        } = self;
+
+        // valid proof leaf
+        if rule.is_none() && premises.is_empty() {
+            let context = if conclusion.discharged {
+                &local_context
+            } else {
+                &global_context
+            };
+
+            return context.contains(&conclusion.formula).then_some(());
+        }
+
+        let rule = rule.as_ref().and_then(|rule| rules.get(rule))?;
+
+        // check arity
+        if premises.len() != rule.premises.len() {
+            return None;
+        }
+
+        // check syntactic validity of rule
+        let mut bindings = HashMap::new();
+        if !rule.conclusion.matches(&conclusion.formula, &mut bindings) {
+            return None;
+        }
+        for (premise, premise_rule) in premises.iter().zip(rule.premises.iter()) {
+            if !premise_rule
+                .pattern
+                .matches(&premise.conclusion.formula, &mut bindings)
+            {
+                return None;
+            }
+        }
+
+        // check subproofs
+        for (premise, premise_rule) in premises.iter().zip(rule.premises.iter()) {
+            let mut extended_local_context = local_context.clone();
+            for assumption in &premise_rule.assumptions {
+                let assumption = assumption.clone().substitute(&bindings)?;
+                extended_local_context.insert(assumption);
+            }
+
+            premise.check(rules, global_context, &extended_local_context)?;
+        }
+
+        Some(())
+    }
 }
 
 /// A judgement in an ND derivation is essentially just a formula of [prop].
 /// Additionally, it holds the information whether it is a discharged assumption.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Judgement {
-    pub formula: prop::Formula,
+    pub formula: Formula,
     pub discharged: bool,
 }

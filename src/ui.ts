@@ -1,18 +1,17 @@
-import { appState } from ".";
-import { getRule, Rules } from "./rules";
-import type { DeductionNode } from "./state";
+import { appState, rule_map, rules } from ".";
+import type { Derivation } from "./state";
 import { centerTree, fitTreeToViewport } from "./zoom";
 
 export function renderRuleList(container: HTMLElement) {
     container.innerHTML = "";
-    for (const rule of Rules) {
+    for (const rule of rules) {
         const btn = document.createElement("button");
         btn.textContent = rule.label;
         btn.onclick = () => {
             appState.pushHistory();
-            const newNode = appState.createNode(rule.name, rule.arity);
+            const newNode = appState.createNode(rule.id, rule.arity);
             if (!appState.selectedNode) {
-                appState.root = newNode;
+                appState.derivation = newNode;
                 appState.selectedNode = newNode;
             } else {
                 Object.assign(appState.selectedNode, newNode);
@@ -64,8 +63,8 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
 let firstcenter = false;
 export function renderTree(container: HTMLElement, doFit = true) {
     container.innerHTML = "";
-    if (!appState.root) return;
-    const node = renderNode(appState.root);
+    if (!appState.derivation) return;
+    const node = renderNode(appState.derivation);
     container.appendChild(node);
     requestAnimationFrame(() => {
         adjustAllRuleLines();
@@ -79,7 +78,7 @@ export function renderTree(container: HTMLElement, doFit = true) {
     });
 }
 
-function renderNode(node: DeductionNode): HTMLElement {
+function renderNode(node: Derivation): HTMLElement {
     const wrapper = document.createElement("div");
     wrapper.className = "tree-node";
 
@@ -103,8 +102,8 @@ function renderNode(node: DeductionNode): HTMLElement {
     const label = document.createElement("span");
     label.className = "rule-label";
     if (node.rule) {
-        console.log(Rules);
-        label.textContent = getRule(node.rule) ? getRule(node.rule)!.label : node.rule;
+        const rule = rule_map.get(node.rule);
+        label.textContent = rule ? rule!.label : node.rule;
         ruleLine.appendChild(line);
         ruleLine.appendChild(label);
     }

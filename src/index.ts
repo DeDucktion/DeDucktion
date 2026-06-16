@@ -3,9 +3,12 @@ import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree
 import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
-import { parse_derivation } from "engine";
+import { get_rules, type Rule, validate } from "engine";
 
 export const appState = new AppState();
+
+export const rules: Rule[] = get_rules();
+export const rule_map = new Map(rules.map((r) => [r.id, r]));
 
 const transformLayer = document.getElementById("transformLayer")!;
 const scale = 1;
@@ -27,7 +30,7 @@ const conclusionInput = document.getElementById("conclusion") as HTMLInputElemen
 attachKeyboardShortcuts(premisesInput);
 attachKeyboardShortcuts(conclusionInput);
 
-appState.root = null;
+appState.derivation = null;
 appState.selectedNode = null;
 
 renderTree(document.getElementById("canvas")!);
@@ -47,20 +50,20 @@ document.getElementById("undoBtn")!.onclick = () => {
 };
 
 document.getElementById("validateBtn")!.onclick = () => {
-    const premInput = document.getElementById("premises") as HTMLInputElement;
-    const conclInput = document.getElementById("conclusion") as HTMLInputElement;
+    const premises = document.getElementById("premises") as HTMLInputElement;
+    const conclusion = document.getElementById("conclusion") as HTMLInputElement;
     const resEl = document.getElementById("result")!;
-    console.log(premInput.value, conclInput.value);
 
-    // TODO: validation
-    try {
-        const parsed = parse_derivation(appState.root);
-        console.log(parsed);
-    } catch {
-        console.warn("Could not parse");
+    let res = false;
+
+    if (appState.derivation) {
+        try {
+            validate(appState.derivation, premises.value, conclusion.value);
+            res = true;
+        } catch {
+            res = false;
+        }
     }
-
-    const res = true;
 
     if (res === true) resEl.textContent = "Correct proof";
     else if (res === false) resEl.textContent = "Incorrect proof";
@@ -72,7 +75,7 @@ document.getElementById("practiceBtn")!.onclick = () => {
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
-    appState.root = null;
+    appState.derivation = null;
     appState.selectedNode = null;
     appState.history = [];
     renderTree(document.getElementById("canvas")!);
