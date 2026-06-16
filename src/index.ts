@@ -1,28 +1,19 @@
 import { AppState } from "./state";
-import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
-import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
+import { attachKeyboardShortcuts, renderRuleList, renderTree, adjustAll } from "./ui";
+import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
 import { ExportFormat, export_derivation, get_rules, type Rule, validate } from "engine";
 
 export const appState = new AppState();
-
 export const rules: Rule[] = get_rules();
-export const rule_map = new Map(rules.map((r) => [r.id, r]));
-
-const transformLayer = document.getElementById("transformLayer")!;
-const scale = 1;
-const offsetX = 0;
-const offsetY = 0;
-let isPanning = false;
-let lastX = 0;
-let lastY = 0;
-
-function updateTransform() {
-    transformLayer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+const ruleById = new Map(rules.map((rule) => [rule.id, rule]));
+export function rule_map(id: string): Rule | undefined {
+    return ruleById.get(id);
 }
 
-renderRuleList(document.getElementById("rules")!);
+window.addEventListener("DOMContentLoaded", () => {
+    renderRuleList(document.getElementById("rules")!);
 
 const premisesInput = document.getElementById("premises") as HTMLInputElement;
 const conclusionInput = document.getElementById("conclusion") as HTMLInputElement;
@@ -34,20 +25,29 @@ appState.derivation = null;
 appState.selectedNode = null;
 
 renderTree(document.getElementById("canvas")!);
-updateTransform();
-renderTree(document.getElementById("canvas")!);
 
-window.addEventListener("resize", () => {
-    requestAnimationFrame(() => {
-        adjustAllRuleLines();
-        fitTreeToViewport();
+    // Window resize: re-layout lines/conclusions, debounced via rAF
+    let resizeRaf: number | null = null;
+    window.addEventListener("resize", () => {
+        if (resizeRaf !== null) return;
+        resizeRaf = requestAnimationFrame(() => {
+            resizeRaf = null;
+            adjustAll();
+        });
     });
-});
 
-document.getElementById("undoBtn")!.onclick = () => {
-    appState.undo();
-    renderTree(document.getElementById("canvas")!, false);
-};
+    // ---------- Buttons ----------
+
+    const resEl = document.getElementById("result")!;
+    const setResult = (text: string, kind: "ok" | "err" | "ghost") => {
+        resEl.textContent = text;
+        resEl.className = kind;
+    };
+
+    document.getElementById("undoBtn")!.onclick = () => {
+        if (!appState.undo()) return;       // nothing to undo -> don't re-render
+        renderTree(document.getElementById("canvas")!);
+    };
 
 document.getElementById("validateBtn")!.onclick = () => {
     const premises = document.getElementById("premises") as HTMLInputElement;
@@ -75,22 +75,21 @@ document.getElementById("practiceBtn")!.onclick = () => {
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
-    appState.derivation = null;
-    appState.selectedNode = null;
-    appState.history = [];
-    renderTree(document.getElementById("canvas")!);
-    centerTree();
-};
+        appState.pushHistory();
+        appState.derivation = null;
+        appState.selectedNode = null;
+        renderTree(document.getElementById("canvas")!);
+        setTransform(1, 0, 0);
+        setResult("No validation yet.", "ghost");
+    };
 
-document.getElementById("clearInputBtn")!.onclick = () => {
-    const premInput = document.getElementById("premises") as HTMLInputElement;
-    const conclInput = document.getElementById("conclusion") as HTMLInputElement;
-    const resEl = document.getElementById("result");
+    document.getElementById("clearInputBtn")!.onclick = () => {
+        premisesInput.value = "";
+        conclusionInput.value = "";
+        setResult("No validation yet.", "ghost");
+    };
 
-    premInput.value = "";
-    conclInput.value = "";
-    if (resEl) resEl.textContent = "No validation yet";
-};
+    document.getElementById("fitBtn")!.onclick = () => fitAndCenter();
 
 document.getElementById("convertTypBtn")!.onclick = async () => {
     try {
@@ -114,59 +113,98 @@ document.getElementById("convertTexBtn")!.onclick = async () => {
     }
 };
 
-// Zoom and dragable
-const viewport = document.getElementById("proofViewport")!;
 
-viewport.addEventListener(
-    "wheel",
-    (e) => {
-        e.preventDefault();
+    // ---------- Zoom & Pan ----------
 
-        const rect = viewport.getBoundingClientRect();
-        const mx = e.clientX - rect.left;
-        const my = e.clientY - rect.top;
+    const viewport = document.getElementById("proofViewport")!;
 
+    // Never start panning / fitting when the user interacts with a
+    // formula input or a button inside the tree.
+    const isInteractive = (t: EventTarget | null) =>
+        t instanceof HTMLElement && !!t.closest("input, button, a, select, textarea");
+
+    viewport.addEventListener(
+        "wheel",
+        (e) => {
+            e.preventDefault();
+
+            const rect = viewport.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+
+            const { scale, offsetX, offsetY } = getTransform();
+
+            // Exponential factor: smooth on trackpads (small deltas)
+            // and still snappy on mouse wheels (large deltas).
+            const zoomFactor = Math.exp(-e.deltaY * 0.0015);
+            const newScale = clampScale(scale * zoomFactor);
+
+            // Zoom towards the cursor
+            const nx = mx - ((mx - offsetX) / scale) * newScale;
+            const ny = my - ((my - offsetY) / scale) * newScale;
+
+            setTransform(newScale, nx, ny);
+        },
+        { passive: false },
+    );
+
+    // Pointer events: works for mouse, touch and pen with one code path.
+    let isPanning = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    viewport.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0) return;          // left button / primary touch only
+        if (isInteractive(e.target)) return; // let inputs receive the click
+        isPanning = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        viewport.setPointerCapture(e.pointerId);
+        viewport.classList.add("panning");
+    });
+
+    viewport.addEventListener("pointermove", (e) => {
+        if (!isPanning) return;
         const { scale, offsetX, offsetY } = getTransform();
+        setTransform(scale, offsetX + e.clientX - lastX, offsetY + e.clientY - lastY);
+        lastX = e.clientX;
+        lastY = e.clientY;
+    });
 
-        const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-        const newScale = Math.min(3, Math.max(0.2, scale * zoomFactor));
+    const endPan = (e: PointerEvent) => {
+        if (!isPanning) return;
+        isPanning = false;
+        viewport.classList.remove("panning");
+        if (viewport.hasPointerCapture(e.pointerId)) {
+            viewport.releasePointerCapture(e.pointerId);
+        }
+    };
+    viewport.addEventListener("pointerup", endPan);
+    viewport.addEventListener("pointercancel", endPan);
 
-        const nx = mx - ((mx - offsetX) / scale) * newScale;
-        const ny = my - ((my - offsetY) / scale) * newScale;
+    // Double-click on the background: fit & center the tree.
+    viewport.addEventListener("dblclick", (e) => {
+        if (isInteractive(e.target)) return;
+        fitAndCenter();
+    });
 
-        setTransform(newScale, nx, ny);
-    },
-    { passive: false },
-);
+    // ---------- Theme ----------
 
-viewport.addEventListener("mousedown", (e) => {
-    isPanning = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
+    const toggle = document.getElementById("themeToggle")!;
+    const setThemeIcon = (theme: string) => {
+        toggle.textContent = theme === "light" ? "🌙" : "☀️";
+    };
+
+    const saved = localStorage.getItem("theme");
+    const initialTheme = saved === "dark" ? "dark" : "light"; // default light
+    document.documentElement.dataset.theme = initialTheme;
+    setThemeIcon(initialTheme);
+
+    toggle.onclick = () => {
+        const root = document.documentElement;
+        const next = root.dataset.theme === "light" ? "dark" : "light";
+        root.dataset.theme = next;
+        localStorage.setItem("theme", next);
+        setThemeIcon(next);
+    };
 });
-
-window.addEventListener("mousemove", (e) => {
-    if (!isPanning) return;
-
-    const { scale, offsetX, offsetY } = getTransform();
-    setTransform(scale, offsetX + e.clientX - lastX, offsetY + e.clientY - lastY);
-
-    lastX = e.clientX;
-    lastY = e.clientY;
-});
-
-window.addEventListener("mouseup", () => (isPanning = false));
-
-// Theme
-const toggle = document.getElementById("themeToggle")!;
-toggle.onclick = () => {
-    const root = document.documentElement;
-    const next = root.dataset.theme === "light" ? "dark" : "light";
-
-    root.dataset.theme = next;
-    localStorage.setItem("theme", next);
-};
-const saved = localStorage.getItem("theme");
-if (saved) {
-    document.documentElement.dataset.theme = saved;
-}
