@@ -271,7 +271,7 @@ a:focus-visible {
 .icon-btn:active {
     transform: scale(0.95);
 }
-
+/*
 .manual-btn {
     display: inline-flex;
     align-items: center;
@@ -301,6 +301,7 @@ a:focus-visible {
     border-color: var(--accent);
     background: var(--accent-soft);
 }
+*/
 
 .title h2 {
     margin: 0;

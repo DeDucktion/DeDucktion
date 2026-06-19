@@ -26,7 +26,6 @@ appState.selectedNode = null;
 
 renderTree(document.getElementById("canvas")!);
 
-    // Window resize: re-layout lines/conclusions, debounced via rAF
     let resizeRaf: number | null = null;
     window.addEventListener("resize", () => {
         if (resizeRaf !== null) return;
@@ -36,7 +35,7 @@ renderTree(document.getElementById("canvas")!);
         });
     });
 
-    // ---------- Buttons ----------
+    //  Buttons
 
     const resEl = document.getElementById("result")!;
     const setResult = (text: string, kind: "ok" | "err" | "ghost") => {
@@ -45,7 +44,7 @@ renderTree(document.getElementById("canvas")!);
     };
 
     document.getElementById("undoBtn")!.onclick = () => {
-        if (!appState.undo()) return;       // nothing to undo -> don't re-render
+        if (!appState.undo()) return;
         renderTree(document.getElementById("canvas")!);
     };
 
@@ -114,12 +113,10 @@ document.getElementById("convertTexBtn")!.onclick = async () => {
 };
 
 
-    // ---------- Zoom & Pan ----------
+    // Zoom & Pan
 
     const viewport = document.getElementById("proofViewport")!;
 
-    // Never start panning / fitting when the user interacts with a
-    // formula input or a button inside the tree.
     const isInteractive = (t: EventTarget | null) =>
         t instanceof HTMLElement && !!t.closest("input, button, a, select, textarea");
 
@@ -134,12 +131,9 @@ document.getElementById("convertTexBtn")!.onclick = async () => {
 
             const { scale, offsetX, offsetY } = getTransform();
 
-            // Exponential factor: smooth on trackpads (small deltas)
-            // and still snappy on mouse wheels (large deltas).
             const zoomFactor = Math.exp(-e.deltaY * 0.0015);
             const newScale = clampScale(scale * zoomFactor);
 
-            // Zoom towards the cursor
             const nx = mx - ((mx - offsetX) / scale) * newScale;
             const ny = my - ((my - offsetY) / scale) * newScale;
 
@@ -148,14 +142,13 @@ document.getElementById("convertTexBtn")!.onclick = async () => {
         { passive: false },
     );
 
-    // Pointer events: works for mouse, touch and pen with one code path.
     let isPanning = false;
     let lastX = 0;
     let lastY = 0;
 
     viewport.addEventListener("pointerdown", (e) => {
-        if (e.button !== 0) return;          // left button / primary touch only
-        if (isInteractive(e.target)) return; // let inputs receive the click
+        if (e.button !== 0) return;
+        if (isInteractive(e.target)) return;
         isPanning = true;
         lastX = e.clientX;
         lastY = e.clientY;
@@ -182,13 +175,12 @@ document.getElementById("convertTexBtn")!.onclick = async () => {
     viewport.addEventListener("pointerup", endPan);
     viewport.addEventListener("pointercancel", endPan);
 
-    // Double-click on the background: fit & center the tree.
     viewport.addEventListener("dblclick", (e) => {
         if (isInteractive(e.target)) return;
         fitAndCenter();
     });
 
-    // ---------- Theme ----------
+    // Theme
 
     const toggle = document.getElementById("themeToggle")!;
     const setThemeIcon = (theme: string) => {
