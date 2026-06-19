@@ -52,7 +52,7 @@ impl Export for Formula {
             Formula::Prop(prop) => prop.clone(),
             Formula::Unary { connective, arg } => {
                 format!(
-                    "{} {}",
+                    "{}{}",
                     connective.export(settings.outer()),
                     arg.export(settings.inner())
                 )
