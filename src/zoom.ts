@@ -58,7 +58,9 @@ function apply() {
 
 export function animateTransformTo(s: number, x: number, y: number, duration = 260) {
     cancelAnimation();
-    const s0 = scale, x0 = offsetX, y0 = offsetY;
+    const s0 = scale,
+        x0 = offsetX,
+        y0 = offsetY;
     const s1 = clampScale(s);
     const start = performance.now();
     const ease = (t: number) => 1 - Math.pow(1 - t, 3);
