@@ -110,9 +110,9 @@ export function renderTree(container: HTMLElement) {
 }
 
 function clearSelectionHighlight() {
-    document
-        .querySelectorAll<HTMLElement>(".tree-node.selected")
-        .forEach((el) => el.classList.remove("selected"));
+    document.querySelectorAll<HTMLElement>(".tree-node.selected").forEach((el) => {
+        el.classList.remove("selected");
+    });
 }
 
 function renderNode(node: Derivation): HTMLElement {

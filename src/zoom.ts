@@ -63,7 +63,7 @@ export function animateTransformTo(s: number, x: number, y: number, duration = 2
         y0 = offsetY;
     const s1 = clampScale(s);
     const start = performance.now();
-    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+    const ease = (t: number) => 1 - (1 - t) ** 3;
 
     const step = (now: number) => {
         const t = Math.min(1, (now - start) / duration);
