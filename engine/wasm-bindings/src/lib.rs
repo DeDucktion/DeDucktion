@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use wasm_bindgen::prelude::*;
 
 use deducktion_engine::derivation::RawDerivation;
+use deducktion_engine::export::{self, Export};
 use deducktion_engine::prop::parser::settings::ParsingSettings;
 use deducktion_engine::{nd, prop};
 
@@ -11,6 +12,21 @@ pub struct Rule {
     pub id: String,
     pub arity: usize,
     pub label: String,
+}
+
+#[wasm_bindgen]
+pub enum ExportFormat {
+    Typst,
+    Latex,
+}
+
+impl Into<deducktion_engine::export::Format> for ExportFormat {
+    fn into(self) -> deducktion_engine::export::Format {
+        match self {
+            ExportFormat::Typst => deducktion_engine::export::Format::Typst,
+            ExportFormat::Latex => deducktion_engine::export::Format::Latex,
+        }
+    }
 }
 
 #[wasm_bindgen]
@@ -69,6 +85,20 @@ pub fn validate(
     }
 
     Ok(JsValue::undefined())
+}
+
+#[wasm_bindgen]
+pub fn export_derivation(derivation: JsValue, format: ExportFormat) -> Result<String, JsValue> {
+    let derivation: RawDerivation = serde_wasm_bindgen::from_value(derivation)?;
+    let derivation: nd::Derivation =
+        nd::Derivation::parse(&derivation, &ParsingSettings::default())
+            .map_err(|_| JsValue::undefined())?;
+    let settings = export::Settings {
+        format: format.into(),
+        outermost: true,
+    };
+    let export = derivation.export(settings);
+    Ok(export)
 }
 
 #[wasm_bindgen]

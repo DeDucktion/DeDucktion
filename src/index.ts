@@ -3,7 +3,7 @@ import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree
 import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
-import { get_rules, type Rule, validate } from "engine";
+import { ExportFormat, export_derivation, get_rules, type Rule, validate } from "engine";
 
 export const appState = new AppState();
 
@@ -93,11 +93,25 @@ document.getElementById("clearInputBtn")!.onclick = () => {
 };
 
 document.getElementById("convertTypBtn")!.onclick = async () => {
-    // TODO: convert to Typst
+    try {
+        const typst = export_derivation(appState.derivation, ExportFormat.Typst);
+        await navigator.clipboard.writeText(typst);
+        alert("Typst code copied to clipboard");
+    } catch (e) {
+        console.error(e);
+        alert("Export failed");
+    }
 };
 
 document.getElementById("convertTexBtn")!.onclick = async () => {
-    // TODO: convert to TeX
+    try {
+        const latex = export_derivation(appState.derivation, ExportFormat.Latex);
+        await navigator.clipboard.writeText(latex);
+        alert("LaTeX code copied to clipboard");
+    } catch (e) {
+        console.error(e);
+        alert("Export failed");
+    }
 };
 
 // Zoom and dragable

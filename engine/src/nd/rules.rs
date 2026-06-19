@@ -32,6 +32,8 @@ pub static RULES_MAP: LazyLock<HashMap<String, Rule>> =
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub struct Rule {
     pub label: String,
+    pub typst: String,
+    pub latex: String,
     pub premises: Vec<Premise>,
     pub conclusion: FormulaPattern,
 }
@@ -50,6 +52,8 @@ pub struct Premise {
 pub fn and_intro() -> Rule {
     Rule {
         label: "∧I".to_string(),
+        typst: "and I".to_string(),
+        latex: r#"\land I"#.to_string(),
         premises: vec![
             Premise {
                 pattern: meta("A"),
@@ -68,6 +72,8 @@ pub fn and_intro() -> Rule {
 pub fn and_elim1() -> Rule {
     Rule {
         label: "∧E1".to_string(),
+        typst: "and E 1".to_string(),
+        latex: r#"\land E1"#.to_string(),
         premises: vec![Premise {
             pattern: binary(meta("A"), And, meta("B")),
             assumptions: vec![],
@@ -80,6 +86,8 @@ pub fn and_elim1() -> Rule {
 pub fn and_elim2() -> Rule {
     Rule {
         label: "∧E2".to_string(),
+        typst: "and E 2".to_string(),
+        latex: r#"\land E2"#.to_string(),
         premises: vec![Premise {
             pattern: binary(meta("A"), And, meta("B")),
             assumptions: vec![],
@@ -92,6 +100,8 @@ pub fn and_elim2() -> Rule {
 pub fn or_intro1() -> Rule {
     Rule {
         label: "∨I1".to_string(),
+        typst: "or I 1".to_string(),
+        latex: r#"\lor I1"#.to_string(),
         premises: vec![Premise {
             pattern: meta("A"),
             assumptions: vec![],
@@ -104,6 +114,8 @@ pub fn or_intro1() -> Rule {
 pub fn or_intro2() -> Rule {
     Rule {
         label: "∨I2".to_string(),
+        typst: "or I 2".to_string(),
+        latex: r#"\lor I2"#.to_string(),
         premises: vec![Premise {
             pattern: meta("B"),
             assumptions: vec![],
@@ -116,6 +128,8 @@ pub fn or_intro2() -> Rule {
 pub fn or_elim() -> Rule {
     Rule {
         label: "∨E".to_string(),
+        typst: "or E".to_string(),
+        latex: r#"\lor E"#.to_string(),
         premises: vec![
             Premise {
                 pattern: binary(meta("A"), Or, meta("B")),
@@ -138,6 +152,8 @@ pub fn or_elim() -> Rule {
 pub fn imp_intro() -> Rule {
     Rule {
         label: "→I".to_string(),
+        typst: "->I".to_string(),
+        latex: r#"\to I"#.to_string(),
         premises: vec![Premise {
             pattern: meta("B"),
             assumptions: vec![meta("A")],
@@ -150,6 +166,8 @@ pub fn imp_intro() -> Rule {
 pub fn imp_elim() -> Rule {
     Rule {
         label: "→E".to_string(),
+        typst: "->E".to_string(),
+        latex: r#"\to E"#.to_string(),
         premises: vec![
             Premise {
                 pattern: binary(meta("A"), Imp, meta("B")),
@@ -168,6 +186,8 @@ pub fn imp_elim() -> Rule {
 pub fn neg_intro() -> Rule {
     Rule {
         label: "¬I".to_string(),
+        typst: "not I".to_string(),
+        latex: r#"\neg I"#.to_string(),
         premises: vec![
             Premise {
                 pattern: meta("B"),
@@ -186,6 +206,8 @@ pub fn neg_intro() -> Rule {
 pub fn neg_elim() -> Rule {
     Rule {
         label: "¬E".to_string(),
+        typst: "not E".to_string(),
+        latex: r#"\neg E"#.to_string(),
         premises: vec![
             Premise {
                 pattern: meta("B"),
@@ -204,6 +226,8 @@ pub fn neg_elim() -> Rule {
 pub fn biimp_intro() -> Rule {
     Rule {
         label: "↔I".to_string(),
+        typst: "<->I".to_string(),
+        latex: r#"\leftrightarrow I"#.to_string(),
         premises: vec![
             Premise {
                 pattern: meta("B"),
@@ -222,6 +246,8 @@ pub fn biimp_intro() -> Rule {
 pub fn biimp_elim1() -> Rule {
     Rule {
         label: "↔E1".to_string(),
+        typst: "<->E 1".to_string(),
+        latex: r#"\leftrightarrow E1"#.to_string(),
         premises: vec![
             Premise {
                 pattern: binary(meta("A"), Biimp, meta("B")),
@@ -240,6 +266,8 @@ pub fn biimp_elim1() -> Rule {
 pub fn biimp_elim2() -> Rule {
     Rule {
         label: "↔E2".to_string(),
+        typst: "<->E 1".to_string(),
+        latex: r#"\leftrightarrow E1"#.to_string(),
         premises: vec![
             Premise {
                 pattern: binary(meta("A"), Biimp, meta("B")),
