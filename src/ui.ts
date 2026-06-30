@@ -5,12 +5,12 @@ import { parse_derivation } from "engine";
 import { centerTreePreserveScale, getTransform, setTransform } from "./zoom";
 
 function isValidFormula(text: string): boolean {
-  try {
-    parse_derivation({ rule: undefined, premises: [], conclusion: text });
-    return true;
-  } catch {
-    return false;
-  }
+    try {
+        parse_derivation({ rule: undefined, premises: [], conclusion: text });
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 export function renderRuleList(container: HTMLElement) {
@@ -25,11 +25,14 @@ export function renderRuleList(container: HTMLElement) {
 
             let anchor: DOMRect | null = null;
             if (!wasEmpty && target) {
-                const el = document.querySelector<HTMLElement>(".tree-node.selected > .conclusion-input");
+                const el = document.querySelector<HTMLElement>(
+                    ".tree-node.selected > .conclusion-input",
+                );
                 if (el) anchor = el.getBoundingClientRect();
             }
 
-            const path = target && appState.derivation ? findPath(appState.derivation, target) : null;
+            const path =
+                target && appState.derivation ? findPath(appState.derivation, target) : null;
             appState.pushHistory(path);
 
             const newNode = appState.createNode(rule.id, rule.arity);
@@ -46,11 +49,17 @@ export function renderRuleList(container: HTMLElement) {
             if (wasEmpty) {
                 centerTreePreserveScale(false);
             } else if (anchor) {
-                const el = document.querySelector<HTMLElement>(".tree-node.selected > .conclusion-input");
+                const el = document.querySelector<HTMLElement>(
+                    ".tree-node.selected > .conclusion-input",
+                );
                 if (el) {
                     const r = el.getBoundingClientRect();
                     const { scale, offsetX, offsetY } = getTransform();
-                    setTransform(scale, offsetX + (anchor.left - r.left), offsetY + (anchor.top - r.top));
+                    setTransform(
+                        scale,
+                        offsetX + (anchor.left - r.left),
+                        offsetY + (anchor.top - r.top),
+                    );
                 }
             }
         };
@@ -102,11 +111,11 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
 }
 
 export function renderTree(container: HTMLElement) {
-  container.innerHTML = "";
-  if (!appState.derivation) return;
-  const node = renderNode(appState.derivation);
-  container.appendChild(node);
-  adjustAll();
+    container.innerHTML = "";
+    if (!appState.derivation) return;
+    const node = renderNode(appState.derivation);
+    container.appendChild(node);
+    adjustAll();
 }
 
 function clearSelectionHighlight() {
@@ -116,8 +125,8 @@ function clearSelectionHighlight() {
 }
 
 function renderNode(node: Derivation): HTMLElement {
-  const wrapper = document.createElement("div");
-  wrapper.className = "tree-node";
+    const wrapper = document.createElement("div");
+    wrapper.className = "tree-node";
 
     // Premises
     const premisesContainer = document.createElement("div");
@@ -128,43 +137,43 @@ function renderNode(node: Derivation): HTMLElement {
 
     wrapper.appendChild(premisesContainer);
 
-  // Rule-line
-  const ruleLine = document.createElement("div");
-  ruleLine.className = node.rule ? "rule-line" : "rule-line hidden";
-  const line = document.createElement("div");
-  line.className = "line";
-  line.style.visibility = "hidden";
-  const label = document.createElement("span");
-  label.className = "rule-label";
-  label.style.visibility = "hidden";
-  if (node.rule) {
-    label.textContent = rule_map(node.rule) ? rule_map(node.rule)!.label : node.rule;
-    ruleLine.appendChild(line);
-    ruleLine.appendChild(label);
-  }
+    // Rule-line
+    const ruleLine = document.createElement("div");
+    ruleLine.className = node.rule ? "rule-line" : "rule-line hidden";
+    const line = document.createElement("div");
+    line.className = "line";
+    line.style.visibility = "hidden";
+    const label = document.createElement("span");
+    label.className = "rule-label";
+    label.style.visibility = "hidden";
+    if (node.rule) {
+        label.textContent = rule_map(node.rule) ? rule_map(node.rule)!.label : node.rule;
+        ruleLine.appendChild(line);
+        ruleLine.appendChild(label);
+    }
 
     wrapper.appendChild(ruleLine);
 
-  // Conclusion
-  const conclusion = document.createElement("input");
-  conclusion.className = "conclusion-input";
-  conclusion.value = node.conclusion ?? "";
-  conclusion.classList.toggle(
-    "invalid",
-    conclusion.value.trim() !== "" && !isValidFormula(conclusion.value)
-  );
-
-  const syncConclusion = () => {
-    node.conclusion = conclusion.value.trim() === "" ? undefined : conclusion.value;
+    // Conclusion
+    const conclusion = document.createElement("input");
+    conclusion.className = "conclusion-input";
+    conclusion.value = node.conclusion ?? "";
     conclusion.classList.toggle(
-      "invalid",
-      conclusion.value.trim() !== "" && !isValidFormula(conclusion.value)
+        "invalid",
+        conclusion.value.trim() !== "" && !isValidFormula(conclusion.value),
     );
-  };
-  conclusion.oninput = syncConclusion;
-  conclusion.addEventListener("change", syncConclusion);
-  attachKeyboardShortcuts(conclusion);
-  wrapper.appendChild(conclusion);
+
+    const syncConclusion = () => {
+        node.conclusion = conclusion.value.trim() === "" ? undefined : conclusion.value;
+        conclusion.classList.toggle(
+            "invalid",
+            conclusion.value.trim() !== "" && !isValidFormula(conclusion.value),
+        );
+    };
+    conclusion.oninput = syncConclusion;
+    conclusion.addEventListener("change", syncConclusion);
+    attachKeyboardShortcuts(conclusion);
+    wrapper.appendChild(conclusion);
 
     wrapper.onclick = (e) => {
         e.stopPropagation();

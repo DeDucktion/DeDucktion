@@ -17,7 +17,6 @@ const MAX_HISTORY = 100;
 
 /* Tree paths */
 
-
 export function findPath(root: Derivation, target: Derivation): number[] | null {
     if (root === target) return [];
     for (let i = 0; i < root.premises.length; i++) {
