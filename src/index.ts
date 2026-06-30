@@ -1,25 +1,15 @@
 import { AppState } from "./state";
-import { adjustAllRuleLines, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
-import { centerTree, fitTreeToViewport, getTransform, setTransform } from "./zoom";
+import { adjustAll, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
+import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
 
 import "../index.css";
 import { ExportFormat, export_derivation, get_rules, type Rule, validate } from "engine";
 
 export const appState = new AppState();
-
 export const rules: Rule[] = get_rules();
-export const rule_map = new Map(rules.map((r) => [r.id, r]));
-
-const transformLayer = document.getElementById("transformLayer")!;
-const scale = 1;
-const offsetX = 0;
-const offsetY = 0;
-let isPanning = false;
-let lastX = 0;
-let lastY = 0;
-
-function updateTransform() {
-    transformLayer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+const ruleById = new Map(rules.map((rule) => [rule.id, rule]));
+export function rule_map(id: string): Rule | undefined {
+    return ruleById.get(id);
 }
 
 renderRuleList(document.getElementById("rules")!);
@@ -34,19 +24,27 @@ appState.derivation = null;
 appState.selectedNode = null;
 
 renderTree(document.getElementById("canvas")!);
-updateTransform();
-renderTree(document.getElementById("canvas")!);
 
+let resizeRaf: number | null = null;
 window.addEventListener("resize", () => {
-    requestAnimationFrame(() => {
-        adjustAllRuleLines();
-        fitTreeToViewport();
+    if (resizeRaf !== null) return;
+    resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = null;
+        adjustAll();
     });
 });
 
+//  Buttons
+
+const resEl = document.getElementById("result")!;
+const setResult = (text: string, kind: "ok" | "err" | "ghost") => {
+    resEl.textContent = text;
+    resEl.className = kind;
+};
+
 document.getElementById("undoBtn")!.onclick = () => {
-    appState.undo();
-    renderTree(document.getElementById("canvas")!, false);
+    if (!appState.undo()) return;
+    renderTree(document.getElementById("canvas")!);
 };
 
 document.getElementById("validateBtn")!.onclick = () => {
@@ -75,22 +73,21 @@ document.getElementById("practiceBtn")!.onclick = () => {
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
+    appState.pushHistory();
     appState.derivation = null;
     appState.selectedNode = null;
-    appState.history = [];
     renderTree(document.getElementById("canvas")!);
-    centerTree();
+    setTransform(1, 0, 0);
+    setResult("No validation yet.", "ghost");
 };
 
 document.getElementById("clearInputBtn")!.onclick = () => {
-    const premInput = document.getElementById("premises") as HTMLInputElement;
-    const conclInput = document.getElementById("conclusion") as HTMLInputElement;
-    const resEl = document.getElementById("result");
-
-    premInput.value = "";
-    conclInput.value = "";
-    if (resEl) resEl.textContent = "No validation yet";
+    premisesInput.value = "";
+    conclusionInput.value = "";
+    setResult("No validation yet.", "ghost");
 };
+
+document.getElementById("fitBtn")!.onclick = () => fitAndCenter();
 
 document.getElementById("convertTypBtn")!.onclick = async () => {
     try {
@@ -114,8 +111,12 @@ document.getElementById("convertTexBtn")!.onclick = async () => {
     }
 };
 
-// Zoom and dragable
+// Zoom & Pan
+
 const viewport = document.getElementById("proofViewport")!;
+
+const isInteractive = (t: EventTarget | null) =>
+    t instanceof HTMLElement && !!t.closest("input, button, a, select, textarea");
 
 viewport.addEventListener(
     "wheel",
@@ -128,8 +129,8 @@ viewport.addEventListener(
 
         const { scale, offsetX, offsetY } = getTransform();
 
-        const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-        const newScale = Math.min(3, Math.max(0.2, scale * zoomFactor));
+        const zoomFactor = Math.exp(-e.deltaY * 0.0015);
+        const newScale = clampScale(scale * zoomFactor);
 
         const nx = mx - ((mx - offsetX) / scale) * newScale;
         const ny = my - ((my - offsetY) / scale) * newScale;
@@ -139,34 +140,60 @@ viewport.addEventListener(
     { passive: false },
 );
 
-viewport.addEventListener("mousedown", (e) => {
+let isPanning = false;
+let lastX = 0;
+let lastY = 0;
+
+viewport.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    if (isInteractive(e.target)) return;
     isPanning = true;
     lastX = e.clientX;
     lastY = e.clientY;
+    viewport.setPointerCapture(e.pointerId);
+    viewport.classList.add("panning");
 });
 
-window.addEventListener("mousemove", (e) => {
+viewport.addEventListener("pointermove", (e) => {
     if (!isPanning) return;
-
     const { scale, offsetX, offsetY } = getTransform();
     setTransform(scale, offsetX + e.clientX - lastX, offsetY + e.clientY - lastY);
-
     lastX = e.clientX;
     lastY = e.clientY;
 });
 
-window.addEventListener("mouseup", () => (isPanning = false));
+const endPan = (e: PointerEvent) => {
+    if (!isPanning) return;
+    isPanning = false;
+    viewport.classList.remove("panning");
+    if (viewport.hasPointerCapture(e.pointerId)) {
+        viewport.releasePointerCapture(e.pointerId);
+    }
+};
+viewport.addEventListener("pointerup", endPan);
+viewport.addEventListener("pointercancel", endPan);
+
+viewport.addEventListener("dblclick", (e) => {
+    if (isInteractive(e.target)) return;
+    fitAndCenter();
+});
 
 // Theme
+
 const toggle = document.getElementById("themeToggle")!;
+const setThemeIcon = (theme: string) => {
+    toggle.textContent = theme === "light" ? "🌙" : "☀️";
+};
+
+const saved = localStorage.getItem("theme");
+const initialTheme = saved === "dark" ? "dark" : "light"; // default light
+document.documentElement.dataset.theme = initialTheme;
+setThemeIcon(initialTheme);
+
 toggle.onclick = () => {
     const root = document.documentElement;
     const next = root.dataset.theme === "light" ? "dark" : "light";
-
     root.dataset.theme = next;
     localStorage.setItem("theme", next);
+    setThemeIcon(next);
 };
-const saved = localStorage.getItem("theme");
-if (saved) {
-    document.documentElement.dataset.theme = saved;
-}

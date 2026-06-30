@@ -1,5 +1,5 @@
 /* Theme */
-/* Dark (default) */
+/* Dark */
 :root {
     --bg: #0f1726;
     --bg-soft: #141b2d;
@@ -18,10 +18,13 @@
     --accent: #4ea1ff;
     --accent-soft: #244468;
 
+    --ok: #34d399;
+    --err: #f87171;
+
     --radius: 14px;
 }
 
-/* Light */
+/* Light (default) */
 :root[data-theme="light"] {
     --bg: #f4f6fa;
     --bg-soft: #fafbfc;
@@ -40,15 +43,14 @@
     --accent: #2563eb;
     --accent-soft: #dbeafe;
 
+    --ok: #059669;
+    --err: #dc2626;
+
     color-scheme: light;
 }
 
 :root[data-theme="dark"] {
     color-scheme: dark;
-}
-
-:root[data-theme="light"] {
-    color-scheme: light;
 }
 
 /* Body */
@@ -66,6 +68,27 @@ body {
     box-sizing: border-box;
 }
 
+/* Smooth theme switching*/
+body,
+.sidebar,
+.panel,
+.main,
+.titleblock,
+input,
+button,
+.icon-btn,
+.conclusion-input {
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* App */
 
 .app {
@@ -75,6 +98,7 @@ body {
     height: 100vh;
     gap: 12px;
     padding: 12px;
+    grid-template-rows: 1fr auto;
 }
 
 /* Sidebar */
@@ -124,11 +148,11 @@ body {
     border: 1px solid var(--border-glass);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 8px 24px #0000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 :root[data-theme="light"] .titleblock {
-    box-shadow: 0 6px 18px #0000;
+    box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
 }
 
 .title,
@@ -158,11 +182,19 @@ input:focus {
     box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
+/* Keyboard navigation stays visible */
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
 /* Actionbar, Toolbar */
 .actionbar {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .actionbar button {
@@ -179,6 +211,10 @@ input:focus {
     color: var(--text);
     border-color: var(--accent);
     background: var(--accent-soft);
+}
+
+.actionbar button:active {
+    transform: scale(0.97);
 }
 
 .toolbar {
@@ -199,15 +235,91 @@ input:focus {
 
 .title {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
+
+.app-title .brand {
+    font-weight: 900;
+    background: linear-gradient(180deg, #a419b9, #250131);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.title-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.icon-btn {
+    background: var(--bg-grey);
+    border: 1px solid var(--border-glass);
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.icon-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+/*
+.manual-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 14px;
+
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+
+    color: var(--text-muted);
+    text-decoration: none;
+
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.manual-btn:hover,
+.manual-btn:focus,
+.manual-btn:visited {
+    text-decoration: none;
+}
+
+.manual-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+*/
 
 .title h2 {
     margin: 0;
     font-size: 1.9rem;
     font-weight: 800;
     color: var(--bg-title);
+    text-align: center;
+    flex: 1;
+}
+
+.title-placeholder {
+    width: 80px;
+    visibility: hidden;
 }
 
 /* Canvas */
@@ -228,6 +340,19 @@ input:focus {
     overflow: hidden;
     position: relative;
     background: transparent;
+
+    cursor: grab;
+    touch-action: none;
+    overscroll-behavior: contain;
+}
+
+#proofViewport.panning {
+    cursor: grabbing;
+}
+
+#proofViewport.panning,
+#proofViewport.panning * {
+    user-select: none;
 }
 
 #transformLayer {
@@ -235,6 +360,7 @@ input:focus {
     position: relative;
     width: 100%;
     height: 100%;
+    will-change: transform;
 }
 
 /* Rulebuttons */
@@ -311,6 +437,18 @@ input:focus {
     min-width: 80px;
     background: var(--bg-grey);
     padding: 10px 20px;
+    cursor: text;
+}
+
+/* Selected node: shows where the next rule will be applied */
+.tree-node.selected > .conclusion-input {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Formula doesn't parse */
+.conclusion-input.invalid {
+    border-color: var(--err);
 }
 
 .tree-node input {
@@ -327,6 +465,16 @@ input:focus {
 #result.ghost {
     color: var(--text-muted);
     font-style: italic;
+}
+
+#result.ok {
+    color: var(--ok);
+    font-weight: 600;
+}
+
+#result.err {
+    color: var(--err);
+    font-weight: 600;
 }
 
 /* Split right panel */
@@ -375,4 +523,69 @@ input:focus {
     margin-bottom: 6px;
     font-size: 0.8rem;
     color: var(--text-muted);
+}
+
+/* Accessibility: respect users who disable animations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Footer */
+
+.footer {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 7px 16px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+}
+
+.footer-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-logo {
+    width: 16px;
+    height: 16px;
+    margin-right: 7px;
+    border-radius: 3px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.footer-brand {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.footer-sep {
+    margin: 0 9px;
+    opacity: 0.45;
+    user-select: none;
+}
+
+.footer a {
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px dotted transparent;
+    transition:
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.footer a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
 }
