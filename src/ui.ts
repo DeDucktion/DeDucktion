@@ -1,7 +1,7 @@
+import { parse_derivation } from "engine";
 import { appState, rule_map, rules } from ".";
 import type { Derivation } from "./state";
 import { findPath } from "./state";
-import { parse_derivation } from "engine";
 import { centerTreePreserveScale, getTransform, setTransform } from "./zoom";
 
 function isValidFormula(text: string): boolean {

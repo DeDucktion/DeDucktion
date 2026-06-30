@@ -1,5 +1,5 @@
 import { AppState } from "./state";
-import { attachKeyboardShortcuts, renderRuleList, renderTree, adjustAll } from "./ui";
+import { adjustAll, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
 import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
 
 import "../index.css";

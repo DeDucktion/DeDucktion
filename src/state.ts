@@ -77,7 +77,7 @@ export class AppState {
         const entry = this.history.pop();
         if (!entry) return false;
         let carry = false;
-        let carriedConclusion: Derivation["conclusion"] = undefined;
+        let carriedConclusion: Derivation["conclusion"];
         if (entry.modifiedPath !== null && this.derivation) {
             const cur = nodeAtPath(this.derivation, entry.modifiedPath);
             if (cur) {
