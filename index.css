@@ -255,11 +255,16 @@ a:focus-visible {
 .icon-btn {
     background: var(--bg-grey);
     border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 6px 12px;
-    color: var(--text-muted);
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
+    color: var(--text);
+    font-size: 0.95rem;
 }
 
 .icon-btn:hover {
