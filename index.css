@@ -86,7 +86,7 @@ button,
 }
 
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 /* App */
@@ -234,12 +234,9 @@ a:focus-visible {
 /* Title */
 
 .title {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-}
-
-.title {
     font-size: 0.4rem;
 }
 
@@ -255,6 +252,7 @@ a:focus-visible {
 .title-buttons {
     display: flex;
     gap: 12px;
+    justify-self: end;
 }
 
 .icon-btn {
@@ -281,15 +279,16 @@ a:focus-visible {
 .icon-btn:active {
     transform: scale(0.95);
 }
-/*
 .manual-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    justify-self: start;
 
-    padding: 8px 14px;
+    padding: 4px 20px;
+    font-size: 1rem;
 
-    background: transparent;
+    background: var(--bg-grey);
     border: 1px solid var(--border-glass);
     border-radius: 8px;
 
@@ -311,7 +310,6 @@ a:focus-visible {
     border-color: var(--accent);
     background: var(--accent-soft);
 }
-*/
 
 .title h2 {
     margin: 0;
@@ -319,7 +317,6 @@ a:focus-visible {
     font-weight: 800;
     color: var(--bg-title);
     text-align: center;
-    flex: 1;
 }
 
 .title-placeholder {
@@ -622,7 +619,7 @@ a:focus-visible {
 /* Accessibility: respect users who disable animations */
 @media (prefers-reduced-motion: reduce) {
     * {
-        transition: none !important;
+        transition: none;
     }
 }
 
