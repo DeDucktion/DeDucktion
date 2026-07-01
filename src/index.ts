@@ -1,7 +1,7 @@
+import { randomProblem } from "./practice-data";
 import { AppState } from "./state";
 import { adjustAll, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
 import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
-import { randomProblem } from "./practice-data";
 
 import "../index.css";
 import { ExportFormat, export_derivation, get_rules, type Rule, validate } from "engine";
