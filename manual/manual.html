@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        (() => {
+            const saved = localStorage.getItem("theme");
+            const theme = saved === "dark" ? "dark" : "light";
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Manual – DeDucktion</title>
+    <meta name="color-scheme" content="dark light">
+
+    <!-- KaTeX for proper LaTeX symbols (\varphi, \land, \rightarrow, ...) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+
+    <link rel="stylesheet" href="manual.css" />
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a href="../index.html" class="back-link">← Back to the calculator</a>
+        <div class="topbar-actions">
+            <button type="button" id="themeToggle" class="icon-btn" aria-label="Toggle theme">🌙</button>
+            <a href="https://github.com/DeDucktion" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.26.82-.58 0-.287-.01-1.05-.015-2.06-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.838 1.237 1.838 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.123-.3-.535-1.52.117-3.16 0 0 1.008-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.29-1.552 3.297-1.23 3.297-1.23.653 1.64.24 2.86.118 3.16.768.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.62-5.476 5.92.43.37.824 1.102.824 2.22 0 1.602-.015 2.894-.015 3.287 0 .322.216.698.83.578C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <nav class="side-toc" id="sideToc" aria-label="Section navigation">
+        <p class="side-toc-title">Contents</p>
+        <ol>
+            <li><a href="#overview" data-target="overview">1. Overview</a></li>
+            <li>
+                <a href="#formal-notions" data-target="formal-notions">2. Formal Notions</a>
+                <ol>
+                    <li><a href="#syntax" data-target="syntax">2.1. Syntax</a></li>
+                    <li><a href="#nd-system" data-target="nd-system">2.2. Natural Deduction</a></li>
+                </ol>
+            </li>
+            <li>
+                <a href="#usage" data-target="usage">3. Using the Calculator</a>
+                <ol>
+                    <li><a href="#rule-sidebar" data-target="rule-sidebar">3.1. The Rule Sidebar</a></li>
+                    <li><a href="#action-bar" data-target="action-bar">3.2. The Action Bar</a></li>
+                    <li><a href="#input-bar" data-target="input-bar">3.3. The Claim</a></li>
+                    <li><a href="#canvas-nav" data-target="canvas-nav">3.4. The Canvas</a></li>
+                    <li><a href="#panels" data-target="panels">3.5. Result &amp; Input Help</a></li>
+                </ol>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="page">
+
+        <!--  Title block  -->
+        <section class="titlepage">
+            <p class="kicker">Manual</p>
+            <h1>DeDucktion</h1>
+            <p class="subtitle">A Natural Deduction Calculator</p>
+            <p class="authors">
+                <a href="https://github.com/leanderhert" target="_blank" rel="noopener">Leander Herter</a>
+                <span class="dot">·</span>
+                <a href="https://github.com/rabuu" target="_blank" rel="noopener">Rasmus Buurman</a>
+            </p>
+            <p class="meta">
+                2026-06-12 &nbsp;·&nbsp; Version 0.1.0 &nbsp;·&nbsp;
+                <a href="https://github.com/DeDucktion" target="_blank" rel="noopener">github.com/DeDucktion</a>
+            </p>
+        </section>
+
+        <!--  Contents  -->
+        <nav class="toc" id="mainToc" aria-label="Contents">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#overview">1. Overview</a></li>
+                <li>
+                    <a href="#formal-notions">2. Formal Notions</a>
+                    <ol>
+                        <li><a href="#syntax">2.1. Syntax</a></li>
+                        <li><a href="#nd-system">2.2. Natural Deduction System</a></li>
+                    </ol>
+                </li>
+                <li>
+                    <a href="#usage">3. Using the Calculator</a>
+                    <ol>
+                        <li><a href="#rule-sidebar">3.1. The Rule Sidebar</a></li>
+                        <li><a href="#action-bar">3.2. The Action Bar</a></li>
+                        <li><a href="#input-bar">3.3. Claim: Premises &amp; Conclusion</a></li>
+                        <li><a href="#canvas-nav">3.4. The Canvas</a></li>
+                        <li><a href="#panels">3.5. Result, Input Help &amp; Convert Help</a></li>
+                    </ol>
+                </li>
+            </ol>
+        </nav>
+
+        <!--  1. Overview  -->
+        <section id="overview">
+            <h2><span class="secno">1.</span> Overview</h2>
+
+            <p>This manual provides an introduction to the relevant formal definitions and to the
+            usage of our calculator. In general, this calculator is designed to offer an opportunity
+            for visually creating deduction trees step by step.</p>
+
+            <p>Thus, the main focus is to make the process of creating such a tree more accessible.
+            For this reason, the major spotlight is given to the design of the webpage. However, we
+            are also interested in a fast and clean backend that proof-checks all the deduction
+            trees.</p>
+
+            <p>Some functionality which might also be interesting for people who are more advanced
+            in logic is the converting tool. Everyone who deals with logic comes sooner or later in
+            touch with deduction trees. Typesetting such deduction trees remains an issue: although
+            there are very useful packages, it is still time-consuming. For this reason, the
+            calculator offers to convert every tree you create into ready-to-use LaTeX or Typst
+            code.</p>
+
+            <p>It is still a challenge to agree on a general syntax and definition of a natural
+            deduction proof system. Since DeDucktion is an open-source project, we invite everyone
+            to integrate their own syntax and formal definition of their natural deduction proof
+            system. For now, we start with the formal notions oriented at the lecture
+            <em>"Einführung in die formale Logik"</em> (Introduction to Formal Logic) from Tübingen.
+            So far the calculator is only usable for propositional logic.</p>
+        </section>
+
+        <!--  2. Formal Notions  -->
+        <section id="formal-notions">
+            <h2><span class="secno">2.</span> Formal Notions</h2>
+
+            <section id="syntax">
+            <h3><span class="secno">2.1.</span> Syntax</h3>
+
+            <p>We start with the definition of the syntax of propositional logic.</p>
+
+            <div class="env env-def">
+                <p class="env-head">Definition 2.1.1 <span class="env-name">(Language)</span></p>
+                <p>The language of our propositional logic contains only the following symbols:</p>
+                <ol>
+                    <li>Propositional symbols: <span class="ktx">P, Q, R, P_1, Q_1, R_1, P_2, \ldots</span></li>
+                    <li>Connectives: <span class="ktx">\lnot,\ \land,\ \lor,\ \rightarrow,\ \leftrightarrow</span></li>
+                    <li>Parentheses: <span class="ktx">(\ ,\ )</span></li>
+                </ol>
+            </div>
+
+            <p>This is followed by the inductive definition of a formula.</p>
+
+            <div class="env env-def">
+                <p class="env-head">Definition 2.1.2 <span class="env-name">(Formula)</span></p>
+                <ol>
+                    <li>Every propositional symbol is a formula.</li>
+                    <li>If <span class="ktx">\varphi</span> is a formula, then <span class="ktx">\lnot\varphi</span> is a formula.</li>
+                    <li>If <span class="ktx">\varphi</span> and <span class="ktx">\psi</span> are formulas, then <span class="ktx">(\varphi \land \psi)</span> is a formula.</li>
+                    <li>If <span class="ktx">\varphi</span> and <span class="ktx">\psi</span> are formulas, then <span class="ktx">(\varphi \lor \psi)</span> is a formula.</li>
+                    <li>If <span class="ktx">\varphi</span> and <span class="ktx">\psi</span> are formulas, then <span class="ktx">(\varphi \rightarrow \psi)</span> is a formula.</li>
+                    <li>If <span class="ktx">\varphi</span> and <span class="ktx">\psi</span> are formulas, then <span class="ktx">(\varphi \leftrightarrow \psi)</span> is a formula.</li>
+                    <li>Nothing else is a formula.</li>
+                </ol>
+            </div>
+
+            <p>With this said, we can provide a few examples of formulas that are allowed in our
+            calculator.</p>
+
+            <div class="env env-ex">
+                <p class="env-head">Example</p>
+                <ul class="m-list">
+                    <li><span class="ktx">(P \land (Q \lor P_2))</span></li>
+                    <li><span class="ktx">P_{999}</span></li>
+                    <li><span class="ktx">((P \leftrightarrow R) \rightarrow (R \land R_1))</span></li>
+                </ul>
+            </div>
+
+            <div class="env env-rem">
+                <p class="env-head">Remark</p>
+                <p>We do not allow any propositional symbols other than
+                <span class="ktx">P, Q, R</span> and
+                <span class="ktx">P_i, Q_j, R_l</span> for
+                <span class="ktx">i, j, l \in \mathbb{N}</span>.<sup class="fn"><a href="#fn1" id="fnref1">1</a></sup></p>
+                <p>A parenthesis-saving convention is not included either. Therefore, there is no
+                defined hierarchy between the connectives.</p>
+            </div>
+            </section>
+
+            <section id="nd-system">
+            <h3><span class="secno">2.2.</span> Natural Deduction System</h3>
+
+            <p>For every connective we define at least one introduction and one elimination rule.</p>
+
+            <div class="env env-def">
+                <p class="env-head">Definition 2.2.1 <span class="env-name">(Deduction Rules)</span></p>
+
+                <!-- Conjunction -->
+                <div class="rule-group">
+                    <p class="rule-group-title"><span class="ktx">\land</span> Conjunction</p>
+                    <div class="rule-row">
+                        <div class="rule-card">
+                            <p class="rule-title">Introduction</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">\varphi</span><span class="fml ktx">\psi</span></div>
+                                <div class="bar"><span class="lbl ktx">\land\mathrm{I}</span></div>
+                                <div class="concl ktx">(\varphi \land \psi)</div>
+                            </div></div>
+                        </div>
+                        <div class="rule-card">
+                            <p class="rule-title">Elimination 1</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">(\varphi \land \psi)</span></div>
+                                <div class="bar"><span class="lbl ktx">\land\mathrm{E}1</span></div>
+                                <div class="concl ktx">\varphi</div>
+                            </div></div>
+                        </div>
+                        <div class="rule-card">
+                            <p class="rule-title">Elimination 2</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">(\varphi \land \psi)</span></div>
+                                <div class="bar"><span class="lbl ktx">\land\mathrm{E}2</span></div>
+                                <div class="concl ktx">\psi</div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disjunction -->
+                <div class="rule-group">
+                    <p class="rule-group-title"><span class="ktx">\lor</span> Disjunction</p>
+                    <div class="rule-row">
+                        <div class="rule-card">
+                            <p class="rule-title">Introduction 1</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">\varphi</span></div>
+                                <div class="bar"><span class="lbl ktx">\lor\mathrm{I}1</span></div>
+                                <div class="concl ktx">(\varphi \lor \psi)</div>
+                            </div></div>
+                        </div>
+                        <div class="rule-card">
+                            <p class="rule-title">Introduction 2</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">\psi</span></div>
+                                <div class="bar"><span class="lbl ktx">\lor\mathrm{I}2</span></div>
+                                <div class="concl ktx">(\varphi \lor \psi)</div>
+                            </div></div>
+                        </div>
+                    </div>
+                    <div class="rule-row">
+                        <div class="rule-card rule-wide">
+                            <p class="rule-title">Elimination</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem">
+                                    <span class="fml ktx">(\varphi \lor \psi)</span>
+                                    <span class="hyp-col"><span class="fml ktx">[\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\chi</span></span>
+                                    <span class="hyp-col"><span class="fml ktx">[\psi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\chi</span></span>
+                                </div>
+                                <div class="bar"><span class="lbl ktx">\lor\mathrm{E}</span></div>
+                                <div class="concl ktx">\chi</div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conditional -->
+                <div class="rule-group">
+                    <p class="rule-group-title"><span class="ktx">\rightarrow</span> Conditional</p>
+                    <div class="rule-row">
+                        <div class="rule-card">
+                            <p class="rule-title">Introduction</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem">
+                                    <span class="hyp-col"><span class="fml ktx">[\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\psi</span></span>
+                                </div>
+                                <div class="bar"><span class="lbl ktx">\rightarrow\mathrm{I}</span></div>
+                                <div class="concl ktx">(\varphi \rightarrow \psi)</div>
+                            </div></div>
+                        </div>
+                        <div class="rule-card">
+                            <p class="rule-title">Elimination</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">(\varphi \rightarrow \psi)</span><span class="fml ktx">\varphi</span></div>
+                                <div class="bar"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                                <div class="concl ktx">\psi</div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Negation -->
+                <div class="rule-group">
+                    <p class="rule-group-title"><span class="ktx">\lnot</span> Negation</p>
+                    <div class="rule-row">
+                        <div class="rule-card">
+                            <p class="rule-title">Introduction</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem">
+                                    <span class="hyp-col"><span class="fml ktx">[\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\psi</span></span>
+                                    <span class="hyp-col"><span class="fml ktx">[\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\lnot\psi</span></span>
+                                </div>
+                                <div class="bar"><span class="lbl ktx">\lnot\mathrm{I}</span></div>
+                                <div class="concl ktx">\lnot\varphi</div>
+                            </div></div>
+                        </div>
+                        <div class="rule-card">
+                            <p class="rule-title">Elimination</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem">
+                                    <span class="hyp-col"><span class="fml ktx">[\lnot\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\psi</span></span>
+                                    <span class="hyp-col"><span class="fml ktx">[\lnot\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\lnot\psi</span></span>
+                                </div>
+                                <div class="bar"><span class="lbl ktx">\lnot\mathrm{E}</span></div>
+                                <div class="concl ktx">\varphi</div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biconditional -->
+                <div class="rule-group">
+                    <p class="rule-group-title"><span class="ktx">\leftrightarrow</span> Biconditional</p>
+                    <div class="rule-row">
+                        <div class="rule-card rule-wide">
+                            <p class="rule-title">Introduction</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem">
+                                    <span class="hyp-col"><span class="fml ktx">[\varphi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\psi</span></span>
+                                    <span class="hyp-col"><span class="fml ktx">[\psi]</span><span class="dots ktx">\vdots</span><span class="fml ktx">\varphi</span></span>
+                                </div>
+                                <div class="bar"><span class="lbl ktx">\leftrightarrow\mathrm{I}</span></div>
+                                <div class="concl ktx">(\varphi \leftrightarrow \psi)</div>
+                            </div></div>
+                        </div>
+                    </div>
+                    <div class="rule-row">
+                        <div class="rule-card">
+                            <p class="rule-title">Elimination 1</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">(\varphi \leftrightarrow \psi)</span><span class="fml ktx">\varphi</span></div>
+                                <div class="bar"><span class="lbl ktx">\leftrightarrow\mathrm{E}1</span></div>
+                                <div class="concl ktx">\psi</div>
+                            </div></div>
+                        </div>
+                        <div class="rule-card">
+                            <p class="rule-title">Elimination 2</p>
+                            <div class="prf"><div class="inf">
+                                <div class="prem"><span class="fml ktx">(\varphi \leftrightarrow \psi)</span><span class="fml ktx">\psi</span></div>
+                                <div class="bar"><span class="lbl ktx">\leftrightarrow\mathrm{E}2</span></div>
+                                <div class="concl ktx">\varphi</div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="env env-rem">
+                <p class="env-head">Remark</p>
+                <p>In this calculator the order of the premises matters. That means the calculator
+                will <em>not</em> accept instances of:</p>
+                <div class="prf prf-center"><div class="inf">
+                    <div class="prem"><span class="fml ktx">\varphi</span><span class="fml ktx">(\varphi \rightarrow \psi)</span></div>
+                    <div class="bar"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                    <div class="concl ktx">\psi</div>
+                </div></div>
+                <p>Another important remark is that the discharging brackets are
+                obligatory.<sup class="fn"><a href="#fn2" id="fnref2">2</a></sup></p>
+            </div>
+
+            <p>With these rules one can define the derivability relation
+            <span class="ktx">\Gamma \vdash \varphi</span>.</p>
+
+            <div class="env env-def">
+                <p class="env-head">Definition 2.2.2 <span class="env-name">(Derivability)</span></p>
+                <p>Let <span class="ktx">\Gamma</span> be a set of propositional logic formulas and
+                let <span class="ktx">\varphi</span> be one such formula. Then
+                <span class="ktx">\Gamma \vdash \varphi</span> holds iff
+                <span class="ktx">\varphi</span> is the result of using the rules of
+                Definition&nbsp;2.2.1 with only the formulas of <span class="ktx">\Gamma</span> as
+                open assumptions.<sup class="fn"><a href="#fn3" id="fnref3">3</a></sup></p>
+            </div>
+
+            <!--  Example 1  -->
+            <div class="env env-ex example" id="ex1">
+                <p class="env-head">Example 1
+                    <span class="env-name ktx">(P \rightarrow Q),\ (Q \rightarrow R) \vdash (P \rightarrow R)</span>
+                </p>
+                <div class="prf prf-center prf-big">
+                    <div class="inf">
+                        <div class="prem">
+                            <div class="inf">
+                                <div class="prem">
+                                    <span class="fml ktx" data-step="3">(Q \rightarrow R)</span>
+                                    <div class="inf">
+                                        <div class="prem">
+                                            <span class="fml ktx" data-step="4">(P \rightarrow Q)</span>
+                                            <span class="fml ktx" data-step="4">[P]</span>
+                                        </div>
+                                        <div class="bar" data-step="4"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                                        <div class="concl ktx" data-step="3">Q</div>
+                                    </div>
+                                </div>
+                                <div class="bar" data-step="3"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                                <div class="concl ktx" data-step="2">R</div>
+                            </div>
+                        </div>
+                        <div class="bar" data-step="2"><span class="lbl ktx">\rightarrow\mathrm{I}</span></div>
+                        <div class="concl ktx" data-step="1">(P \rightarrow R)</div>
+                    </div>
+                </div>
+
+                <div class="stepper-bar">
+                    <button type="button" class="step-btn" data-action="prev" aria-label="Previous step">←</button>
+                    <button type="button" class="step-btn" data-action="next" aria-label="Next step">→</button>
+                </div>
+            </div>
+
+            <!--  Example 2 -->
+            <div class="env env-ex example" id="ex2">
+                <p class="env-head">Example 2
+                    <span class="env-name ktx">(P \lor Q),\ (P \rightarrow R_1),\ (Q \rightarrow R_2) \vdash (R_1 \lor R_2)</span>
+                </p>
+
+                <div class="prf prf-center prf-big">
+                    <div class="inf">
+                        <div class="prem">
+                            <span class="fml ktx" data-step="2">(P \lor Q)</span>
+
+                            <div class="inf">
+                                <div class="prem">
+                                    <div class="inf">
+                                        <div class="prem">
+                                            <span class="fml ktx" data-step="4">(P \rightarrow R_1)</span>
+                                            <span class="fml ktx" data-step="4">[P]</span>
+                                        </div>
+                                        <div class="bar" data-step="4"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                                        <div class="concl ktx" data-step="3">R_1</div>
+                                    </div>
+                                </div>
+                                <div class="bar" data-step="3"><span class="lbl ktx">\lor\mathrm{I}1</span></div>
+                                <div class="concl ktx" data-step="2">(R_1 \lor R_2)</div>
+                            </div>
+
+                            <div class="inf">
+                                <div class="prem">
+                                    <div class="inf">
+                                        <div class="prem">
+                                            <span class="fml ktx" data-step="6">(Q \rightarrow R_2)</span>
+                                            <span class="fml ktx" data-step="6">[Q]</span>
+                                        </div>
+                                        <div class="bar" data-step="6"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                                        <div class="concl ktx" data-step="5">R_2</div>
+                                    </div>
+                                </div>
+                                <div class="bar" data-step="5"><span class="lbl ktx">\lor\mathrm{I}2</span></div>
+                                <div class="concl ktx" data-step="2">(R_1 \lor R_2)</div>
+                            </div>
+                        </div>
+                        <div class="bar" data-step="2"><span class="lbl ktx">\lor\mathrm{E}</span></div>
+                        <div class="concl ktx" data-step="1">(R_1 \lor R_2)</div>
+                    </div>
+                </div>
+
+                <div class="stepper-bar">
+                    <button type="button" class="step-btn" data-action="prev" aria-label="Previous step">←</button>
+                    <button type="button" class="step-btn" data-action="next" aria-label="Next step">→</button>
+                </div>
+            </div>
+            </section>
+
+        </section>
+
+        <!--  3. Usage  -->
+        <section id="usage">
+            <h2><span class="secno">3.</span> Using the Calculator</h2>
+
+            <p>You now know the rules of our proof system (Section&nbsp;2.2). In this chapter we provide an explanation on how to turn such a proof tree in a DeDucktion tree in the calculator and after that how to proof-check it. The calculator is built around one idea:
+            you state a claim <span class="ktx">\Gamma \vdash \varphi</span>, then you build up the proof tree bottom up, starting with the last inferential step, and build the proof upwards by applying one rule at a time. Similarly to the two examples above.</p>
+
+            <!--  Interface overview  -->
+            <section id="interface-overview">
+            <h3><span class="secno"></span> The Interface</h3>
+
+            <p>The calculator has five areas. This is shown in the schematic graphic below;
+            the numbers point to the sections that follow.</p>
+
+            <figure class="ui-map-figure">
+                <div class="ui-map" role="img"
+                     aria-label="Schematic of the calculator: rule sidebar on the left, action bar and claim bar across the top, proof canvas in the centre, and the result, input-help, and convert-help panels on the right.">
+                    <!-- 1 · Rule sidebar -->
+                    <div class="uim-region uim-sidebar">
+                        <span class="uim-pin">1</span>
+                        <p class="uim-cap">Rules</p>
+                        <span class="uim-chip"></span>
+                        <span class="uim-chip"></span>
+                        <span class="uim-chip"></span>
+                        <span class="uim-chip"></span>
+                        <span class="uim-chip"></span>
+                    </div>
+
+                    <div class="uim-main">
+                        <!-- 2 · Action bar -->
+                        <div class="uim-region uim-actions">
+                            <span class="uim-pin">2</span>
+                            <span class="uim-btn"></span>
+                            <span class="uim-btn"></span>
+                            <span class="uim-btn"></span>
+                            <span class="uim-btn"></span>
+                            <span class="uim-btn"></span>
+                        </div>
+                        <!-- 3 · Claim bar -->
+                        <div class="uim-region uim-claim">
+                            <span class="uim-pin">3</span>
+                            <span class="uim-field"></span>
+                            <span class="uim-turnstile ktx">\vdash</span>
+                            <span class="uim-field"></span>
+                        </div>
+                        <!-- 4 · Canvas -->
+                        <div class="uim-region uim-canvas">
+                            <span class="uim-pin">4</span>
+                            <span class="uim-canvas-note">Proof canvas</span>
+                        </div>
+                    </div>
+
+                    <!-- 5 · Right panels -->
+                    <div class="uim-region uim-panel">
+                        <span class="uim-pin">5</span>
+                        <p class="uim-cap">Result</p>
+                        <span class="uim-line"></span>
+                        <p class="uim-cap">Input&nbsp;Help</p>
+                        <span class="uim-line short"></span>
+                        <span class="uim-line short"></span>
+                        <p class="uim-cap">Convert&nbsp;Help</p>
+                        <span class="uim-line short"></span>
+                        <span class="uim-line short"></span>
+                    </div>
+                </div>
+                <figcaption>The calculator&rsquo;s five areas</figcaption>
+            </figure>
+
+            <ol class="ui-legend">
+                <li><span class="leg-num">1</span><a href="#rule-sidebar"><strong>Rule sidebar</strong></a> — one button for each deduction rule.</li>
+                <li><span class="leg-num">2</span><a href="#action-bar"><strong>Action bar</strong></a> — validate, clear, undo, export, and view controls.</li>
+                <li><span class="leg-num">3</span><a href="#input-bar"><strong>The claim</strong></a> — the premises, the turnstile <span class="ktx">\vdash</span>, and the conclusion you want to derive.</li>
+                <li><span class="leg-num">4</span><a href="#canvas-nav"><strong>Proof canvas</strong></a> — the canvas in which you can build your tree.</li>
+                <li><span class="leg-num">5</span><a href="#panels"><strong>Result, Input&nbsp;Help &amp; Convert&nbsp;Help</strong></a> — shows the verdict of the proof-check, input shortcuts, and package import helpers for export.</li>
+            </ol>
+            </section>
+
+            <!--  3.1 Rule sidebar  -->
+            <section id="rule-sidebar">
+            <h3><span class="secno">3.1.</span> The Rule Sidebar</h3>
+
+            <p> At the moment the Rule Sidebar shows a list of every rule defined in Definition&nbsp;2.2.1, with the same label, e.g. <span class="ktx">\land\mathrm{I}</span>, <span class="ktx">\rightarrow\mathrm{E}</span>,
+            <span class="ktx">\lnot\mathrm{I}</span>. By clicking on such a rule button you apply the rule either to the empty canvas or with respect to a selected node.</p>
+
+            <p>Clicking a rule does one of two things:</p>
+            <ol>
+                <li><strong>Empty canvas.</strong> The clicked rule becomes the <em>root</em> of a
+                new tree: a conclusion box, the inference line with the rule&rsquo;s label, and one
+                empty premise slot per premise of that rule.</li>
+                <li><strong>A node is selected.</strong> That node is turned into the conclusion of
+                the rule: the line and label appear above it, and fresh empty premise slots are
+                added on top. Whatever formula was already in the box is kept.</li>
+            </ol>
+
+            <p>For example, if you click on <span class="ktx">\rightarrow\mathrm{E}</span>, an empty deduction tree appears in the canvas (one empty node for the conclusion and one empty node for each premise). </p>
+
+            <div class="rule-schema">
+                <div class="rs-cell">
+                    <p class="rs-cap">Rule button</p>
+                    <span class="rs-rule-btn"><span class="ktx">\rightarrow\mathrm{E}</span></span>
+                </div>
+                <div class="rs-arrow ktx" aria-hidden="true">\Longrightarrow</div>
+                <div class="rs-cell">
+                    <p class="rs-cap">Schema on the canvas</p>
+                    <div class="prf prf-center"><div class="inf">
+                        <div class="prem">
+                            <span class="fml ba-slot"></span>
+                            <span class="fml ba-slot"></span>
+                        </div>
+                        <div class="bar"><span class="lbl ktx">\rightarrow\mathrm{E}</span></div>
+                        <div class="concl ba-slot"></div>
+                    </div></div>
+                </div>
+            </div>
+
+            <p> Now you can fill in the empty nodes. For each premise, you either type in a formula or press another rule. At the end every conclusion and premise node must be filled with exactly one (maybe discharged) formula.</p>
+            </section>
+
+            <!--  3.2 Action bar  -->
+            <section id="action-bar">
+            <h3><span class="secno">3.2.</span> The Action Bar</h3>
+
+            <p>Above the canvas and the claim you find the <em>action bar</em>. For every crucial functionality there is a button. The following lists every button:</p>
+
+            <figure class="ui-shot">
+                <div class="btnbar-mock">
+                    <span class="bm-btn">Validate</span>
+                    <span class="bm-btn">Clear Tree</span>
+                    <span class="bm-btn">Clear Input</span>
+                    <span class="bm-btn">Undo</span>
+                    <span class="bm-btn">Convert to Typst</span>
+                    <span class="bm-btn">Convert to LaTeX</span>
+                    <span class="bm-btn">Practice</span>
+                    <span class="bm-btn">Fit View</span>
+                </div>
+            </figure>
+
+            <dl class="btn-ref">
+                <dt>Validate</dt>
+                <dd>Runs the proof checker on the current tree against the claim in the bar, and
+                writes the verdict into the result panel.</dd>
+
+                <dt>Clear Tree</dt>
+                <dd>Removes the whole tree from the canvas.</dd>
+
+                <dt>Clear Input</dt>
+                <dd>Empties the premise and conclusion fields.</dd>
+
+                <dt>Undo</dt>
+                <dd>Steps back through your edits (applied rules, typed formulas, and the view)
+                up to the last 100 changes.</dd>
+
+                <dt>Convert to Typst</dt>
+                <dd>Exports the current tree as ready-to-paste <em>Typst</em> code.</dd>
+
+                <dt>Convert to LaTeX</dt>
+                <dd>Exports the current tree as ready-to-paste <em>LaTeX</em> code.</dd>
+
+                <dt>Practice</dt>
+                <dd>Loads a practice claim. The problems are taken from The Natural Deduction Pack by Alastair Carr.<sup class="fn"><a href="#fn4" id="fnref4">4</a></sup></dd>
+
+                <dt>Fit View</dt>
+                <dd>Zooms and re-centres so the entire tree fits the canvas.</dd>
+            </dl>
+            </section>
+
+            <!--  3.3 Claim bar  -->
+            <section id="input-bar">
+            <h3><span class="secno">3.3.</span> Claim: Premises &amp; Conclusion</h3>
+
+            <p>The bar under the buttons states the claim you are trying to prove,
+            <span class="ktx">\Gamma \vdash \varphi</span>:</p>
+
+            <figure class="ui-shot">
+                <div class="claim-mock">
+                    <div class="cm-side">
+                        <span class="cm-tag">Premises</span>
+                        <span class="cm-box cm-text ktx">(P \rightarrow Q),\ P</span>
+                    </div>
+                    <span class="cm-turnstile ktx">\vdash</span>
+                    <div class="cm-side">
+                        <span class="cm-tag">Conclusion</span>
+                        <span class="cm-box cm-text ktx">Q</span>
+                    </div>
+                </div>
+            </figure>
+
+            <ul class="plain-list">
+                <li><strong>Premises: </strong> The formulas <span class="ktx">\Gamma</span> you are allowed to use as
+                open assumptions, separated by commas.</li>
+                <li><strong>Conclusion: </strong> The single formula
+                <span class="ktx">\varphi</span> your tree must end in.</li>
+            </ul>
+
+            <p>This is what <em>Validate</em> checks: the conclusion at the bottom of your tree must
+            match the right field, and every open assumption left in the tree must appear among the
+            premises on the left.</p>
+            </section>
+
+            <!--  3.4 Canvas navigation  -->
+            <section id="canvas-nav">
+            <h3><span class="secno">3.4.</span> The Canvas</h3>
+
+            <p>The canvas is the working area where the tree grows. You can scroll as 
+            far as you want in any direction. You can also zoom in and out. </p>
+              <p>  If you select an input field of a tree-node you can selct another rule
+                or type in a formula with the shortcuts like <code>-></code> or <code>imp</code>.
+                If you type in an invalid formula the input field gets a red stroke. </p>
+                <p> If a proof scrolls off the screen, the <em>Fit View</em>-Button resets the 
+                zoom and position so the whole tree is visible and centred again. </p>
+            </section>
+
+            <!--  3.5 Right panels  -->
+            <section id="panels">
+            <h3><span class="secno">3.5.</span> The Result, Input Help &amp; Convert Help Panels</h3>
+
+            <p>The right-hand column has three stacked panels.</p>
+
+            <div class="panel-grid">
+                <div class="panel-col">
+                    <figure class="ui-shot">
+                        <div class="res-mock">
+                            <p class="rm-title">Result</p>
+                            <p class="rm-line rm-ghost">Correct proof.</p>
+                            <p class="rm-line rm-ghost">Incorrect proof.</p>
+                            <p class="rm-line rm-ghost">No validation yet.</p>
+                        </div>
+                    </figure>
+                    <p class="panel-desc"><strong>Result</strong> stays muted until you press <em>Validate</em>. A correct proof turns it to <em>Correct proof</em>; a broken step turns it to <em>Incorrect proof</em>.</p>
+                </div>
+
+                <div class="panel-col">
+                    <figure class="ui-shot">
+                        <div class="help-mock">
+                            <p class="hm-title">Input Help</p>
+                            <p class="hm-row"><code>and</code>, <code>&amp;</code> for <span class="ktx">\land</span></p>
+                            <p class="hm-row"><code>or</code>, <code>|</code> for <span class="ktx">\lor</span></p>
+                            <p class="hm-row"><code>not</code>, <code>~</code> for <span class="ktx">\lnot</span></p>
+                            <p class="hm-row"><code>imp</code>, <code>-&gt;</code> for <span class="ktx">\rightarrow</span></p>
+                            <p class="hm-row"><code>biimp</code>, <code>&lt;-&gt;</code> for <span class="ktx">\leftrightarrow</span></p>
+                        </div>
+                    </figure>
+                    <p class="panel-desc"><strong>Input Help</strong> shows keyboard shortcuts: type any sequence in a formula field and it is replaced by the logical symbol as you go.</p>
+                </div>
+
+                <div class="panel-col">
+                    <figure class="ui-shot">
+                        <div class="convert-mock">
+                            <p class="hm-title">Convert Help</p>
+                            <div class="convert-help">
+                                <div class="convert-item">
+                                    <div class="convert-row">
+                                        <a href="https://typst.app/universe/package/curryst/" target="_blank" rel="noopener">curryst</a>
+                                        <span class="convert-tag tag-typst">Typst</span>
+                                    </div>
+                                    <button class="copy-btn" type="button" disabled>Copy import</button>
+                                </div>
+                                <div class="convert-item">
+                                    <div class="convert-row">
+                                        <a href="https://ctan.org/pkg/bussproofs" target="_blank" rel="noopener">bussproofs</a>
+                                        <span class="convert-tag tag-latex">LaTeX</span>
+                                    </div>
+                                    <button class="copy-btn" type="button" disabled>Copy import</button>
+                                </div>
+                            </div>
+                        </div>
+                    </figure>
+                    <p class="panel-desc"><strong>Convert Help</strong> provides a ready-to-copy import command for either <em>curryst</em> for Typst or <em>bussproofs</em> for LaTeX.</p>
+                </div>
+            </div>
+            </section>
+
+        </section>
+
+        <!--  Footnotes  -->
+        <footer class="footnotes">
+            <hr>
+            <ol>
+                <li id="fn1">If the premise is a global assumption, the brackets are optional.
+                    <a href="#fnref1" class="fn-back" aria-label="Back to text">↩</a></li>
+                <li id="fn2">An assumption is open iff it is not discharged.
+                    <a href="#fnref2" class="fn-back" aria-label="Back to text">↩</a></li>
+                <li id="fn3">In the calculator, indices are written directly next to the propositional symbol without any separator, e.g. <span class="ktx">R_1</span> is entered as <code>R1</code>.
+                    <a href="#fnref3" class="fn-back" aria-label="Back to text">↩</a></li>
+                <li id="fn4"><a href="https://github.com/Alastair-Carr/Natural-Deduction-Pack" target="_blank" rel="noopener">github.com/Alastair-Carr/Natural-Deduction-Pack</a>
+                    <a href="#fnref4" class="fn-back" aria-label="Back to text">↩</a></li>
+            </ol>
+        </footer>
+    </div>
+
+    <script>
+        //  Theme toggle
+        const toggle = document.getElementById("themeToggle");
+        const setThemeIcon = (theme) => {
+            toggle.textContent = theme === "light" ? "🌙" : "☀️";
+        };
+        setThemeIcon(document.documentElement.dataset.theme || "light");
+
+        toggle.onclick = () => {
+            const root = document.documentElement;
+            const next = root.dataset.theme === "light" ? "dark" : "light";
+            root.dataset.theme = next;
+            localStorage.setItem("theme", next);
+            setThemeIcon(next);
+        };
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const renderMath = () => {
+                document.querySelectorAll(".ktx").forEach(el => {
+                    const tex = el.textContent;
+                    try {
+                        katex.render(tex, el, { throwOnError: false });
+                    } catch (_e) { /* leave the raw TeX visible as fallback */ }
+                });
+            };
+            if (window.katex) renderMath();
+            else {
+                const script = document.querySelector('script[src*="katex"]');
+                if (script) script.addEventListener("load", renderMath);
+            }
+        });
+
+        //  Interactive proof steppers (bottom-up) 
+        function initStepper(section) {
+            const stepped = section.querySelectorAll("[data-step]");
+            let maxStep = 1;
+            stepped.forEach(el => { maxStep = Math.max(maxStep, +el.dataset.step); });
+
+            const prevBtn = section.querySelector('[data-action="prev"]');
+            const nextBtn = section.querySelector('[data-action="next"]');
+
+            let current = 1;
+
+            function render() {
+                stepped.forEach(el => {
+                    const s = +el.dataset.step;
+                    el.classList.toggle("future", s > current);
+                    el.classList.toggle("now", s === current);
+                });
+                prevBtn.disabled = current <= 1;
+                nextBtn.disabled = current >= maxStep;
+            }
+
+            prevBtn.onclick = () => { if (current > 1) { current--; render(); } };
+            nextBtn.onclick = () => { if (current < maxStep) { current++; render(); } };
+
+            render();
+        }
+
+        document.querySelectorAll(".example").forEach(initStepper);
+
+        //  Floating side TOC 
+        const sideToc = document.getElementById("sideToc");
+        const mainToc = document.getElementById("mainToc");
+
+        // show the side TOC once the inline contents box has scrolled out of view
+        const tocObserver = new IntersectionObserver(([entry]) => {
+            const below = entry.boundingClientRect.top < 0;
+            sideToc.classList.toggle("visible", !entry.isIntersecting && below);
+        }, { threshold: 0 });
+        tocObserver.observe(mainToc);
+
+        // highlight the section currently in view
+        const sectionIds = ["overview", "formal-notions", "syntax", "nd-system", "usage",
+            "interface-overview", "rule-sidebar", "action-bar", "input-bar", "canvas-nav", "panels"];
+        const links = new Map(
+            Array.from(sideToc.querySelectorAll("a[data-target]"))
+                .map(a => [a.dataset.target, a])
+        );
+
+        const spy = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const link = links.get(entry.target.id);
+                if (!link) return;
+                if (entry.isIntersecting) {
+                    links.forEach(l => { l.classList.remove("active"); });
+                    link.classList.add("active");
+                }
+            });
+        }, { rootMargin: "-20% 0px -65% 0px" });
+
+        sectionIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) spy.observe(el);
+        });
+    </script>
+</body>
+</html>

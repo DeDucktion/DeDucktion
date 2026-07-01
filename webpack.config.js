@@ -18,6 +18,10 @@ const config = {
     devServer: {
         open: true,
         host: "localhost",
+        static: {
+            directory: path.resolve(__dirname, "manual"),
+            publicPath: "/manual",
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({
