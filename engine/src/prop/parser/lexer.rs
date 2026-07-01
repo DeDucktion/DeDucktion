@@ -61,6 +61,15 @@ fn proposition<'src>(
             .map(|c| c.to_string())
             .boxed(),
         PropStyle::Ident => ident().map(|s: &str| s.to_string()).boxed(),
+        PropStyle::PQRIndexed => one_of(['P', 'Q', 'R'])
+            .then(
+                any()
+                    .filter(|c: &char| c.is_ascii_digit())
+                    .repeated()
+                    .collect::<String>(),
+            )
+            .map(|(c, digits): (char, String)| format!("{c}{digits}"))
+            .boxed(),
     };
 
     prop_matcher.map(Token::Prop)

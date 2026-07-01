@@ -74,16 +74,16 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
     let buffer = "";
 
     const replacements: Record<string, string> = {
-        "<": "∧",
         and: "∧",
         "&": "∧",
-        ">": "∨",
         or: "∨",
         "|": "∨",
         "~": "¬",
         not: "¬",
         "->": "→",
-        to: "→",
+        imp: "→",
+        biimp: "↔︎",
+        "<->": "↔︎"
     };
 
     const maxLen = Math.max(...Object.keys(replacements).map((k) => k.length));

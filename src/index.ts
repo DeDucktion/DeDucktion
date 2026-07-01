@@ -197,3 +197,47 @@ toggle.onclick = () => {
     localStorage.setItem("theme", next);
     setThemeIcon(next);
 };
+
+async function copyText(text: string): Promise<void> {
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+    }
+    
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    if (!ok) throw new Error("execCommand copy failed");
+}
+
+function initCopyButtons(): void {
+    document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const text = btn.dataset.copy ?? "";
+            const original = btn.textContent;
+            try {
+                await copyText(text);
+                btn.textContent = "Copied!";
+                btn.classList.add("copied");
+            } catch (err) {
+                console.error("Kopieren fehlgeschlagen:", err);
+                btn.textContent = "Error!";
+            }
+            setTimeout(() => {
+                btn.textContent = original;
+                btn.classList.remove("copied");
+            }, 2000);
+        });
+    });
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCopyButtons);
+} else {
+    initCopyButtons();
+}
