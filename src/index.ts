@@ -203,7 +203,7 @@ async function copyText(text: string): Promise<void> {
         await navigator.clipboard.writeText(text);
         return;
     }
-    
+
     const ta = document.createElement("textarea");
     ta.value = text;
     ta.style.position = "fixed";

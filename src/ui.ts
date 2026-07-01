@@ -83,7 +83,7 @@ export function attachKeyboardShortcuts(input: HTMLInputElement) {
         "->": "→",
         imp: "→",
         biimp: "↔︎",
-        "<->": "↔︎"
+        "<->": "↔︎",
     };
 
     const maxLen = Math.max(...Object.keys(replacements).map((k) => k.length));

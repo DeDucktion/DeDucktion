@@ -252,7 +252,6 @@ a:focus-visible {
     color: transparent;
 }
 
-
 .title-buttons {
     display: flex;
     gap: 12px;
@@ -549,8 +548,6 @@ a:focus-visible {
     padding: 10px;
     transition: border-color 0.2s ease;
 }
-
-
 
 .convert-row {
     display: flex;
