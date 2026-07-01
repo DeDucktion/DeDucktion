@@ -1,6 +1,7 @@
 import { AppState } from "./state";
 import { adjustAll, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
 import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
+import { randomProblem } from "./practice-data";
 
 import "../index.css";
 import { ExportFormat, export_derivation, get_rules, type Rule, validate } from "engine";
@@ -69,7 +70,15 @@ document.getElementById("validateBtn")!.onclick = () => {
 };
 
 document.getElementById("practiceBtn")!.onclick = () => {
-    // TODO: Picks a random instance of a dataset with premises and conclusions
+    const problem = randomProblem();
+    premisesInput.value = problem.premises.join(", ");
+    conclusionInput.value = problem.conclusion;
+    appState.pushHistory();
+    appState.derivation = null;
+    appState.selectedNode = null;
+    renderTree(document.getElementById("canvas")!);
+    setTransform(1, 0, 0);
+    setResult("No validation yet.", "ghost");
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
