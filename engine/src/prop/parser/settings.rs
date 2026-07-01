@@ -7,7 +7,6 @@ pub struct ParsingSettings {
 #[derive(Debug, Clone, Copy, Default)]
 pub enum PropStyle {
     /// Proposition symbols are single letters.
-    #[default]
     Letter,
 
     /// Proposition symbols are single uppercase letters.
@@ -18,14 +17,18 @@ pub enum PropStyle {
 
     /// Proposition symbols are C-style identifiers.
     Ident,
+
+    /// Proposition symbols are P, Q, or R, optionally followed by digits (e.g. P, Q1, R42).
+    #[default]
+    PQRIndexed,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
 pub enum ParenStyle {
     /// Every subformula must be parenthesized.
+    #[default]
     Strict,
 
     /// Outermost parentheses can be omitted.
-    #[default]
     Lax,
 }

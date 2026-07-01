@@ -27,15 +27,17 @@
             <div class="titleblock">
                 <div class="title">
                     <!-- <a href="manual.html" target="_blank" class="manual-btn" aria-label="Manual">Manual</a> -->
-                    
+
                     <div class="title-placeholder"></div>
                     <h2 class="app-title">
                         Natural <span class="brand">DeDucktion</span> Calculator
                     </h2>
                     <div class="title-buttons">
-                        <button id="themeToggle" class="icon-btn" aria-label="Theme umschalten" type="button">🌙</button>
+                        <button id="themeToggle" class="icon-btn" aria-label="Theme umschalten"
+                            type="button">🌙</button>
                         <a href="https://github.com/DeDucktion" target="_blank" class="icon-btn" aria-label="GitHub">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="GitHub label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" role="img"
+                                aria-label="GitHub label">
                                 <path
                                     d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.26.82-.58 0-.287-.01-1.05-.015-2.06-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.838 1.237 1.838 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.123-.3-.535-1.52.117-3.16 0 0 1.008-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.29-1.552 3.297-1.23 3.297-1.23.653 1.64.24 2.86.118 3.16.768.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.62-5.476 5.92.43.37.824 1.102.824 2.22 0 1.602-.015 2.894-.015 3.287 0 .322.216.698.83.578C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
                             </svg>
@@ -77,15 +79,42 @@
 
             <div class="panel-section info-section">
                 <h2>Input Help</h2>
-
                 <div class="symbol-help">
-                    <div><code>-></code> or <code>to</code> for →</div>
-                    <div><code>&</code>, <code>and</code> or <code>&lt;</code> for ∧</div>
-                    <div><code>|</code>, <code>or</code> or <code>&gt;</code> for ∨</div>
-                    <div><code>~</code> or <code>not</code> for ¬</div>
+                    <div><code>and</code>, <code>&amp;</code> for ∧</div>
+                    <div><code>or</code>, <code>|</code> for ∨</div>
+                    <div><code>not</code>, <code>~</code> for ¬</div>
+                    <div><code>imp</code>, <code>-&gt;</code>  for →</div>
+                    <div><code>biimp</code>, <code>&lt;-&gt;</code> for ↔</div>
                 </div>
+            </div>
 
+            <div class="panel-section info-section">
+                <h2>Convert Help</h2>
+                <div class="convert-help">
 
+                    <div class="convert-item">
+                        <div class="convert-row">
+                            <a href="https://typst.app/universe/package/curryst/" target="_blank"
+                                rel="noopener">curryst</a>
+                            <span class="convert-tag tag-typst">Typst</span>
+                        </div>
+                        <button class="copy-btn" type="button"
+                            data-copy='#import "@preview/curryst:0.6.0": rule, prooftree, rule-set'>
+                            Copy import
+                        </button>
+                    </div>
+
+                    <div class="convert-item">
+                        <div class="convert-row">
+                            <a href="https://ctan.org/pkg/bussproofs" target="_blank" rel="noopener">bussproofs</a>
+                            <span class="convert-tag tag-latex">LaTeX</span>
+                        </div>
+                        <button class="copy-btn" type="button" data-copy="&#92;usepackage{bussproofs}">
+                            Copy import
+                        </button>
+                    </div>
+
+                </div>
             </div>
 
         </aside>

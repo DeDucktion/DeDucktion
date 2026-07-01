@@ -1,3 +1,4 @@
+import { randomProblem } from "./practice-data";
 import { AppState } from "./state";
 import { adjustAll, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
 import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
@@ -69,7 +70,15 @@ document.getElementById("validateBtn")!.onclick = () => {
 };
 
 document.getElementById("practiceBtn")!.onclick = () => {
-    // TODO: Picks a random instance of a dataset with premises and conclusions
+    const problem = randomProblem();
+    premisesInput.value = problem.premises.join(", ");
+    conclusionInput.value = problem.conclusion;
+    appState.pushHistory();
+    appState.derivation = null;
+    appState.selectedNode = null;
+    renderTree(document.getElementById("canvas")!);
+    setTransform(1, 0, 0);
+    setResult("No validation yet.", "ghost");
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
@@ -197,3 +206,47 @@ toggle.onclick = () => {
     localStorage.setItem("theme", next);
     setThemeIcon(next);
 };
+
+async function copyText(text: string): Promise<void> {
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+    }
+
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    if (!ok) throw new Error("execCommand copy failed");
+}
+
+function initCopyButtons(): void {
+    document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const text = btn.dataset.copy ?? "";
+            const original = btn.textContent;
+            try {
+                await copyText(text);
+                btn.textContent = "Copied!";
+                btn.classList.add("copied");
+            } catch (err) {
+                console.error("Kopieren fehlgeschlagen:", err);
+                btn.textContent = "Error!";
+            }
+            setTimeout(() => {
+                btn.textContent = original;
+                btn.classList.remove("copied");
+            }, 2000);
+        });
+    });
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCopyButtons);
+} else {
+    initCopyButtons();
+}
