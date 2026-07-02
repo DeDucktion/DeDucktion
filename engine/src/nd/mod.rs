@@ -85,6 +85,11 @@ impl Derivation {
                     return None;
                 }
 
+                // A local assumption MUST be discharged
+                if !conclusion.discharged && local_context.contains(&conclusion.formula) {
+                    return None;
+                }
+
                 let context = if conclusion.discharged {
                     &local_context
                 } else {
