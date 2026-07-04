@@ -73,7 +73,10 @@
 
             <div class="panel-section result-section">
                 <h2>Result</h2>
-                <div id="result" class="ghost">No validation yet.</div>
+                <div id="result" class="result-card ghost">
+                    <div class="result-status">No validation yet</div>
+                    <div class="result-detail">Build a proof-tree, then press <em>Validate</em> to check it.</div>
+                </div>
             </div>
 
             <div class="panel-section info-section">
@@ -84,6 +87,7 @@
                     <div><code>not</code>, <code>~</code> for ¬</div>
                     <div><code>imp</code>, <code>-&gt;</code>  for →</div>
                     <div><code>biimp</code>, <code>&lt;-&gt;</code> for ↔</div>
+                    <div> Use <code>[,]</code> to discharge assumptions. </div>
                 </div>
             </div>
 
@@ -121,11 +125,15 @@
             <div class="footer-group">
                 <img src="assets/favicon.ico" alt="" class="footer-logo" />
                 <span class="footer-sep">·</span>
-                <span>v0.1.0</span>
+                <span>© 2026 DeDucktion</span>
                 <span class="footer-sep">·</span>
+                <span>v0.1.0</span>
             </div>
             <div class="footer-group">
-                <span>© 2026 DeDucktion</span>
+                <a href="manual/manual.html#support" class="footer-icon" aria-label="Support"
+                    title="Bugs or problems? Get support">
+                    <span>Service</span>
+                </a>
                 <span class="footer-sep">·</span>
                 <a href="https://github.com/DeDucktion/DeDucktion/blob/main/LICENSE" target="_blank">MIT License</a>
                 <span class="footer-sep">·</span>
