@@ -76,7 +76,7 @@ document.getElementById("validateBtn")!.onclick = () => {
     if (res) {
         setResult("Correct derivation", "", "ok");
     } else {
-        setResult("Incorrect derivation","", "err");
+        setResult("Incorrect derivation", "", "err");
     }
 };
 
