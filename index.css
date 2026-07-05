@@ -20,6 +20,7 @@
 
     --ok: #34d399;
     --err: #f87171;
+    --warn: #fbbf24;
 
     --radius: 14px;
 }
@@ -45,6 +46,7 @@
 
     --ok: #059669;
     --err: #dc2626;
+    --warn: #d97706;
 
     color-scheme: light;
 }
@@ -455,30 +457,73 @@ a:focus-visible {
     border-color: var(--err);
 }
 
+/* Invalid formula takes priority over the selection highlight */
+.tree-node.selected > .conclusion-input.invalid {
+    border-color: var(--err);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--err) 25%, transparent);
+}
+
 .tree-node input {
     padding: 4px;
 }
 
 /* Result panel */
 
-#result {
-    font-size: 0.9rem;
+.result-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    background: var(--bg-grey);
+    transition: all 0.15s ease;
+}
+
+.result-status {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     color: var(--text);
 }
 
-#result.ghost {
+.result-detail {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+.result-card.ghost .result-status {
     color: var(--text-muted);
     font-style: italic;
 }
 
-#result.ok {
-    color: var(--ok);
-    font-weight: 600;
+.result-card.ok {
+    border-color: color-mix(in srgb, var(--ok) 30%, var(--bg-grey));
+    background: color-mix(in srgb, var(--ok) 7%, var(--bg-grey));
 }
 
-#result.err {
-    color: var(--err);
-    font-weight: 600;
+.result-card.ok .result-status {
+    color: color-mix(in srgb, var(--ok) 70%, var(--bg-grey));
+}
+
+.result-card.err {
+    border-color: color-mix(in srgb, var(--err) 30%, var(--bg-grey));
+    background: color-mix(in srgb, var(--err) 7%, var(--bg-grey));
+}
+
+.result-card.err .result-status {
+    color: color-mix(in srgb, var(--err) 70%, var(--bg-grey));
+}
+
+.result-card.warn {
+    border-color: color-mix(in srgb, var(--warn) 30%, var(--bg-grey));
+    background: color-mix(in srgb, var(--warn) 7%, var(--bg-grey));
+}
+
+.result-card.warn .result-status {
+    color: color-mix(in srgb, var(--warn) 70%, var(--bg-grey));
 }
 
 /* Split right panel */
@@ -674,6 +719,11 @@ a:focus-visible {
     transition:
         color 0.15s ease,
         border-color 0.15s ease;
+}
+
+.footer-icon {
+    display: inline-flex;
+    align-items: center;
 }
 
 .footer a:hover {

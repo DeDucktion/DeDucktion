@@ -690,6 +690,12 @@ section > p {
     margin-left: 4px;
 }
 
+.support-note {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
 /*  Small screens  */
 @media (max-width: 560px) {
     body {

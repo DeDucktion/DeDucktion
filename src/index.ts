@@ -38,9 +38,12 @@ window.addEventListener("resize", () => {
 //  Buttons
 
 const resEl = document.getElementById("result")!;
-const setResult = (text: string, kind: "ok" | "err" | "ghost") => {
-    resEl.textContent = text;
-    resEl.className = kind;
+const resStatusEl = resEl.querySelector(".result-status")!;
+const resDetailEl = resEl.querySelector(".result-detail")!;
+const setResult = (status: string, detail: string, kind: "ok" | "err" | "warn" | "ghost") => {
+    resStatusEl.textContent = status;
+    resDetailEl.textContent = detail;
+    resEl.className = `result-card ${kind}`;
 };
 
 document.getElementById("undoBtn")!.onclick = () => {
@@ -51,22 +54,30 @@ document.getElementById("undoBtn")!.onclick = () => {
 document.getElementById("validateBtn")!.onclick = () => {
     const premises = document.getElementById("premises") as HTMLInputElement;
     const conclusion = document.getElementById("conclusion") as HTMLInputElement;
-    const resEl = document.getElementById("result")!;
 
-    let res = false;
-
-    if (appState.derivation) {
-        try {
-            validate(appState.derivation, premises.value, conclusion.value);
-            res = true;
-        } catch {
-            res = false;
-        }
+    if (conclusion.value.trim() === "") {
+        setResult("Missing conclusion", "Enter a conclusion formula before validating.", "warn");
+        return;
     }
 
-    if (res === true) resEl.textContent = "Correct proof";
-    else if (res === false) resEl.textContent = "Incorrect proof";
-    else resEl.textContent = "Syntax Error";
+    if (!appState.derivation) {
+        setResult("Missing proof tree", "Build a derivation tree before validating.", "warn");
+        return;
+    }
+
+    let res = false;
+    try {
+        validate(appState.derivation, premises.value, conclusion.value);
+        res = true;
+    } catch {
+        res = false;
+    }
+
+    if (res) {
+        setResult("Correct derivation", "", "ok");
+    } else {
+        setResult("Incorrect derivation", "", "err");
+    }
 };
 
 document.getElementById("practiceBtn")!.onclick = () => {
@@ -78,7 +89,7 @@ document.getElementById("practiceBtn")!.onclick = () => {
     appState.selectedNode = null;
     renderTree(document.getElementById("canvas")!);
     setTransform(1, 0, 0);
-    setResult("No validation yet.", "ghost");
+    setResult("No validation yet", "Build a proof-tree, then press Validate to check it.", "ghost");
 };
 
 document.getElementById("clearTreeBtn")!.onclick = () => {
@@ -87,13 +98,13 @@ document.getElementById("clearTreeBtn")!.onclick = () => {
     appState.selectedNode = null;
     renderTree(document.getElementById("canvas")!);
     setTransform(1, 0, 0);
-    setResult("No validation yet.", "ghost");
+    setResult("No validation yet", "Build a proof-tree, then press Validate to check it.", "ghost");
 };
 
 document.getElementById("clearInputBtn")!.onclick = () => {
     premisesInput.value = "";
     conclusionInput.value = "";
-    setResult("No validation yet.", "ghost");
+    setResult("No validation yet", "Build a proof-tree, then press Validate to check it.", "ghost");
 };
 
 document.getElementById("fitBtn")!.onclick = () => fitAndCenter();
