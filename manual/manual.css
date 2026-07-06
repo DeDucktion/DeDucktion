@@ -1281,3 +1281,57 @@ code {
         margin-top: 10px;
     }
 }
+
+/*  4. Demo  */
+.demo {
+    margin: 24px 0;
+    padding: 14px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+}
+.demo + .demo {
+    margin-top: 20px;
+}
+
+.demo-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 2px 12px;
+    font-family: var(--sans);
+}
+
+.demo-num {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 9px;
+    border-radius: 20px;
+}
+
+.demo-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border-glass);
+    background: #000;
+}
+
+.demo figcaption {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.demo-fallback {
+    margin: 0;
+    padding: 16px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
