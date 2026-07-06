@@ -55,6 +55,7 @@
                     <li><a href="#panels" data-target="panels">3.5. Result &amp; Input Help</a></li>
                 </ol>
             </li>
+            <li><a href="#demo" data-target="demo">4. Demo</a></li>
         </ol>
     </nav>
 
@@ -98,6 +99,7 @@
                         <li><a href="#panels">3.5. Result, Input Help &amp; Convert Help</a></li>
                     </ol>
                 </li>
+                <li><a href="#demo">4. Demo</a></li>
             </ol>
         </nav>
 
@@ -744,6 +746,43 @@
 
         </section>
 
+        <!--  4. Demo  -->
+        <section id="demo">
+            <h2><span class="secno">4.</span> Demo</h2>
+
+            <p>To see the calculator in action, watch the two short demos:</p>
+
+            <figure class="demo">
+                <p class="demo-head">
+                    <span class="demo-num">Demo 1</span>
+                    <span class="ktx">(P \rightarrow Q),\ (Q \rightarrow R) \vdash (P \rightarrow R)</span>
+                </p>
+                <!-- biome-ignore lint/a11y/useMediaCaption: silent screencast, no audio to caption -->
+                <video class="demo-video" controls preload="metadata" playsinline>
+                    <source src="Ex1.webm" type="video/webm" />
+                    <p class="demo-fallback">
+                        Your browser can&rsquo;t play this video.
+                        <a href="Ex1.webm">Download it instead.</a>
+                    </p>
+                </video>
+            </figure>
+
+            <figure class="demo">
+                <p class="demo-head">
+                    <span class="demo-num">Demo 2</span>
+                    <span class="ktx">(P \land (Q \lor R)) \vdash ((P \land Q) \lor (P \land R))</span>
+                </p>
+                <!-- biome-ignore lint/a11y/useMediaCaption: silent screencast, no audio to caption -->
+                <video class="demo-video" controls preload="metadata" playsinline>
+                    <source src="Ex2.webm" type="video/webm" />
+                    <p class="demo-fallback">
+                        Your browser can&rsquo;t play this video.
+                        <a href="Ex2.webm">Download it instead.</a>
+                    </p>
+                </video>
+            </figure>
+        </section>
+
         <!--  Footnotes  -->
         <footer class="footnotes">
             <hr>
@@ -841,7 +880,8 @@
 
         // highlight the section currently in view
         const sectionIds = ["overview", "formal-notions", "syntax", "nd-system", "usage",
-            "interface-overview", "rule-sidebar", "action-bar", "input-bar", "canvas-nav", "panels"];
+            "interface-overview", "rule-sidebar", "action-bar", "input-bar", "canvas-nav", "panels",
+            "demo"];
         const links = new Map(
             Array.from(sideToc.querySelectorAll("a[data-target]"))
                 .map(a => [a.dataset.target, a])
