@@ -372,7 +372,9 @@ a:focus-visible {
     color: var(--text-muted);
     font: inherit;
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
 }
 
 .zoom-controls button + button {
