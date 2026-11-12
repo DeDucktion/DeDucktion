@@ -1,7 +1,7 @@
 import { randomProblem } from "./practice-data";
 import { AppState } from "./state";
 import { adjustAll, attachKeyboardShortcuts, renderRuleList, renderTree } from "./ui";
-import { clampScale, fitAndCenter, getTransform, setTransform } from "./zoom";
+import { clampScale, fitAndCenter, getTransform, setTransform, zoomBy } from "./zoom";
 
 import "../index.css";
 import { ExportFormat, export_derivation, get_rules, type Rule, validate } from "engine";
@@ -108,6 +108,8 @@ document.getElementById("clearInputBtn")!.onclick = () => {
 };
 
 document.getElementById("fitBtn")!.onclick = () => fitAndCenter();
+document.getElementById("zoomInBtn")!.onclick = () => zoomBy(1.2);
+document.getElementById("zoomOutBtn")!.onclick = () => zoomBy(1 / 1.2);
 
 document.getElementById("convertTypBtn")!.onclick = async () => {
     try {

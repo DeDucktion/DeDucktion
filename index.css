@@ -350,6 +350,52 @@ a:focus-visible {
     overscroll-behavior: contain;
 }
 
+.zoom-controls {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 5;
+    display: flex;
+    align-items: stretch;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    cursor: default;
+}
+
+.zoom-controls button {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    color: var(--text-muted);
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.zoom-controls button + button {
+    border-left: 1px solid var(--border-glass);
+}
+
+.zoom-controls #zoomInBtn,
+.zoom-controls #zoomOutBtn {
+    min-width: 34px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.zoom-controls button:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+}
+
+.zoom-controls button:active {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
 #proofViewport.panning {
     cursor: grabbing;
 }

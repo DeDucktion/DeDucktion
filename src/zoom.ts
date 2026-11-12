@@ -129,3 +129,13 @@ export function fitAndCenter(): number | null {
     animateTransformTo(s, x, y, 300);
     return s;
 }
+
+export function zoomBy(factor: number) {
+    const view = document.getElementById("proofViewport")!;
+    const cx = view.clientWidth / 2;
+    const cy = view.clientHeight / 2;
+    const newScale = clampScale(scale * factor);
+    const x = cx - ((cx - offsetX) / scale) * newScale;
+    const y = cy - ((cy - offsetY) / scale) * newScale;
+    animateTransformTo(newScale, x, y, 180);
+}
