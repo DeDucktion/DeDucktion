@@ -393,6 +393,54 @@ a:focus-visible {
     transform: scale(0.98);
 }
 
+.rule-preview {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+    padding: 6px 4px;
+    font-size: 0.6rem;
+    color: var(--text);
+    background: var(--bg);
+    border-radius: 8px;
+    white-space: nowrap;
+    animation: rp-in 0.15s ease;
+}
+
+#rules button:hover .rule-preview {
+    display: flex;
+}
+
+@keyframes rp-in {
+    from {
+        opacity: 0;
+    }
+}
+
+.rp-prem {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.8em;
+    padding: 0 0.3em;
+}
+
+.rp-hyp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rp-dots {
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+.rp-bar {
+    align-self: stretch;
+    border-top: 1px solid var(--bg-tree-line);
+    margin: 3px 0;
+}
+
 /* Prooftree */
 .proof-tree {
     padding: 20px;

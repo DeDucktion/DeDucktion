@@ -1,4 +1,6 @@
 import { parse_derivation } from "engine";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 import { appState, rule_map, rules } from ".";
 import type { Derivation } from "./state";
 import { findPath } from "./state";
@@ -13,11 +15,61 @@ function isValidFormula(text: string): boolean {
     }
 }
 
+type Prem = string | [string, string];
+const Rule_Previews: Record<string, [Prem[], string]> = {
+    "∧I": [["\\varphi", "\\psi"], "(\\varphi \\land \\psi)"],
+    "∧E1": [["(\\varphi \\land \\psi)"], "\\varphi"],
+    "∧E2": [["(\\varphi \\land \\psi)"], "\\psi"],
+    "∨I1": [["\\varphi"], "(\\varphi \\lor \\psi)"],
+    "∨I2": [["\\psi"], "(\\varphi \\lor \\psi)"],
+    "∨E": [["(\\varphi \\lor \\psi)", ["[\\varphi]", "\\chi"], ["[\\psi]", "\\chi"]], "\\chi"],
+    "→I": [[["[\\varphi]", "\\psi"]], "(\\varphi \\rightarrow \\psi)"],
+    "→E": [["(\\varphi \\rightarrow \\psi)", "\\varphi"], "\\psi"],
+    "¬I": [
+        [
+            ["[\\varphi]", "\\psi"],
+            ["[\\varphi]", "\\lnot\\psi"],
+        ],
+        "\\lnot\\varphi",
+    ],
+    "¬E": [
+        [
+            ["[\\lnot\\varphi]", "\\psi"],
+            ["[\\lnot\\varphi]", "\\lnot\\psi"],
+        ],
+        "\\varphi",
+    ],
+    "↔I": [
+        [
+            ["[\\varphi]", "\\psi"],
+            ["[\\psi]", "\\varphi"],
+        ],
+        "(\\varphi \\leftrightarrow \\psi)",
+    ],
+    "↔E1": [["(\\varphi \\leftrightarrow \\psi)", "\\varphi"], "\\psi"],
+    "↔E2": [["(\\varphi \\leftrightarrow \\psi)", "\\psi"], "\\varphi"],
+};
+
+const tex = (t: string) => katex.renderToString(t, { throwOnError: false });
+
+function rulePreview(label: string): string {
+    const p = Rule_Previews[label];
+    if (!p) return "";
+    const prem = p[0]
+        .map((x) =>
+            typeof x === "string"
+                ? `<span>${tex(x)}</span>`
+                : `<span class="rp-hyp"><span>${tex(x[0])}</span><span class="rp-dots">${tex("\\vdots")}</span><span>${tex(x[1])}</span></span>`,
+        )
+        .join("");
+    return `<div class="rule-preview"><div class="rp-prem">${prem}</div><div class="rp-bar"></div><div>${tex(p[1])}</div></div>`;
+}
+
 export function renderRuleList(container: HTMLElement) {
     container.innerHTML = "";
     for (const rule of rules) {
         const btn = document.createElement("button");
-        btn.textContent = rule.label;
+        btn.innerHTML = rule.label + rulePreview(rule.label);
         btn.onclick = () => {
             const canvas = document.getElementById("canvas")!;
             const target = appState.selectedNode;
